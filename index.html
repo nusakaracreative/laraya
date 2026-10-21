@@ -295,6 +295,43 @@ td{padding:9px 8px}
  .dashboard-row-secondary>.card:nth-child(2) td{padding:8px 6px!important;overflow:visible;text-overflow:clip}
 }
 
+
+/* 2026-10 dashboard readability pass: content-led card heights and legible tables */
+.dashboard-row{align-items:start!important}
+.dashboard-row>.card{height:auto!important;min-height:0}
+.dashboard-row-secondary>.card:nth-child(2){min-width:0;overflow:visible!important}
+.dashboard-row-secondary>.card:nth-child(2) .table-wrap{
+  width:100%;max-width:100%;overflow-x:auto!important;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;border:1px solid #edf1f5
+}
+.dashboard-row-secondary>.card:nth-child(2) table{
+  width:100%;min-width:520px!important;max-width:none;table-layout:auto!important;
+  border-collapse:collapse;font-size:12px!important;white-space:nowrap
+}
+.dashboard-row-secondary>.card:nth-child(2) th,
+.dashboard-row-secondary>.card:nth-child(2) td{
+  padding:10px 9px!important;line-height:1.4;overflow:visible;
+  text-overflow:clip;white-space:nowrap
+}
+.dashboard-row-secondary>.card:nth-child(2) th{font-size:11px!important;font-weight:650}
+.dashboard-row-secondary>.card:nth-child(2) td:first-child a{font-size:11px}
+.stock-row{padding:10px 0;gap:10px}
+.prod-name,.notice b,.activity b,.service-row b{font-size:12px!important;line-height:1.4}
+.prod-sub,.notice p,.activity p,.service-row small{font-size:11px!important;line-height:1.45}
+.time{font-size:10px!important}
+.legend-row{font-size:11px!important}
+.link{font-size:12px!important}
+@media(max-width:850px){
+  .dashboard-row{align-items:stretch!important}
+  .dashboard-row>.card{height:auto!important}
+  .dashboard-row-secondary>.card:nth-child(2) .table-wrap{overflow-x:auto!important}
+  .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px!important;font-size:12px!important}
+}
+@media(max-width:560px){
+  .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px!important}
+  .prod-name,.notice b,.activity b,.service-row b{font-size:12px!important}
+}
+
 </style>
 </head>
 <body>
