@@ -78,6 +78,7 @@ document.getElementById('allNotices').addEventListener('click',()=>alert('Panel 
 document.getElementById('allActivity').addEventListener('click',()=>alert('Aktivitas lengkap akan terhubung ke database pada tahap integrasi.'));
 document.querySelectorAll('.txlink').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();alert('Detail transaksi demo. Database belum terhubung.')}));
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.getElementById('globalSearch').focus()}});
-document.getElementById('branchSelect').addEventListener('change',e=>{document.getElementById('filterFeedback').textContent='Cabang dipilih: '+e.target.value+'. Data contoh tidak difilter; integrasi sumber data diperlukan.'});\ndocument.getElementById('dateSelect').addEventListener('change',e=>{document.getElementById('filterFeedback').textContent='Tanggal dipilih: '+e.target.options[e.target.selectedIndex].textContent.trim()+'. Angka tetap berupa data contoh.'});
+document.getElementById('branchSelect').addEventListener('change',e=>{document.getElementById('filterFeedback').textContent='Cabang dipilih: '+e.target.value+'. Data contoh tidak difilter; integrasi sumber data diperlukan.'});
+document.getElementById('dateSelect').addEventListener('change',e=>{document.getElementById('filterFeedback').textContent='Tanggal dipilih: '+e.target.options[e.target.selectedIndex].textContent.trim()+'. Angka tetap berupa data contoh.'});
 </script>
 </body></html>
