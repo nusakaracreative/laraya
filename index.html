@@ -275,19 +275,19 @@ td{padding:9px 8px}
 /* Final table-fit refinement: prevent desktop overflow while retaining all columns. */
 .dashboard-row-secondary>.card:nth-child(2){min-width:0;overflow:hidden}
 .dashboard-row-secondary>.card:nth-child(2) .table-wrap{width:100%;max-width:100%;overflow:hidden!important}
-.dashboard-row-secondary>.card:nth-child(2) table{width:100%!important;min-width:0!important;max-width:100%;table-layout:fixed!important;border-collapse:collapse;font-size:9px}
+.dashboard-row-secondary>.card:nth-child(2) table{width:100%!important;min-width:0!important;max-width:100%;table-layout:fixed!important;border-collapse:collapse;font-size:9.5px}
 .dashboard-row-secondary>.card:nth-child(2) th,
 .dashboard-row-secondary>.card:nth-child(2) td{padding:8px 3px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
-.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1){width:29%}
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1){width:31%}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
-.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2){width:20%}
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2){width:19%}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
 .dashboard-row-secondary>.card:nth-child(2) td:nth-child(3){width:18%}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
 .dashboard-row-secondary>.card:nth-child(2) td:nth-child(4){width:16%}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
-.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5){width:17%}
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5){width:14%}
 @media(max-width:850px){
  .dashboard-row-secondary>.card:nth-child(2) .table-wrap{overflow-x:auto!important}
  .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px!important;table-layout:auto!important}
@@ -350,6 +350,7 @@ const tx=[['TRX-20261020-0018','Andi Saputra','Rp 2.850.000','Transfer','Selesai
 const best=[['1','📱','Samsung A54 5G','28 terjual'],['4','🔌','Charger Type C 20W','45 terjual'],['2','📱','iPhone 11 128GB','24 terjual'],['5','🎧','TWS Bluetooth','32 terjual'],['3','📱','OPPO Reno 7','18 terjual'],['6','📱','Xiaomi Redmi Note 13','27 terjual']];
 document.getElementById('stockList').innerHTML=stock.map(s=>'<div class="stock-row"><div class="product-img">'+s[0]+'</div><div><div class="prod-name">'+s[1]+'</div><div class="prod-sub">'+s[2]+'</div></div><div class="qty">'+s[3]+'</div><span class="pill '+(s[4]==='Perlu Restock'?'warn':'')+'">'+s[4]+'</span><button class="dots" title="Opsi">⋮</button></div>').join('');
 document.getElementById('transactions').innerHTML=tx.map(t=>'<tr><td><a href="#" class="txlink">'+t[0]+'</a></td><td>'+t[1]+'</td><td>'+t[2]+'</td><td>'+t[3]+'</td><td><span class="status '+(t[4]==='Retur'?'return':'')+'">'+t[4]+'</span></td></tr>').join('');
+document.querySelectorAll('.dashboard-row-secondary .table-wrap tbody td').forEach(cell=>{cell.title=cell.textContent.trim()});
 document.getElementById('bestList').innerHTML=best.map(b=>'<div class="best"><b style="font-size:14px">'+b[0]+'</b><div class="product-img">'+b[1]+'</div><div><b>'+b[2]+'</b><small>'+b[3]+'</small></div></div>').join('');
 const bars=[[10,4.5],[10.8,5],[7.8,4.2],[9.4,5.5],[13.5,7],[12.2,7],[16.5,10]];
 document.getElementById('salesChart').innerHTML=bars.map(v=>'<div class="bar-group"><div class="bar" style="height:'+(v[0]/20*100)+'%"></div><div class="bar light" style="height:'+(v[1]/20*100)+'%"></div></div>').join('');
