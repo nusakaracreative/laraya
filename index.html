@@ -332,6 +332,46 @@ td{padding:9px 8px}
   .prod-name,.notice b,.activity b,.service-row b{font-size:12px!important}
 }
 
+
+/* Follow-up correction from live screenshot: compact dashboard rhythm and desktop-fit transactions */
+.layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;align-content:start!important;grid-auto-rows:min-content!important}
+.dashboard-row{align-items:start!important;gap:10px!important;margin:0!important}
+.dashboard-row>.card{height:auto!important;min-height:0!important;align-self:start!important}
+.dashboard-row-secondary>.card:nth-child(2){min-width:0!important;overflow:visible!important}
+.dashboard-row-secondary>.card:nth-child(2) .table-wrap{
+  width:100%!important;max-width:100%!important;overflow-x:hidden!important;
+  border:1px solid #edf1f5;border-radius:9px
+}
+.dashboard-row-secondary>.card:nth-child(2) table{
+  display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  table-layout:fixed!important;border-collapse:collapse;font-size:10.5px!important;white-space:nowrap
+}
+.dashboard-row-secondary>.card:nth-child(2) th,
+.dashboard-row-secondary>.card:nth-child(2) td{
+  padding:8px 4px!important;line-height:1.35;overflow:hidden!important;
+  text-overflow:ellipsis!important;white-space:nowrap!important
+}
+.dashboard-row-secondary>.card:nth-child(2) th{font-size:10.5px!important;font-weight:650}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1){width:29%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2){width:17%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(3){width:19%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(4){width:16%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5){width:19%}
+.dashboard-row-secondary>.card:nth-child(2) td:first-child a{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:850px){
+ .layout{gap:10px!important}
+ .dashboard-row{gap:10px!important}
+ .dashboard-row-secondary>.card:nth-child(2) .table-wrap{overflow-x:auto!important}
+ .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px!important;width:max-content!important;table-layout:auto!important;font-size:12px!important}
+ .dashboard-row-secondary>.card:nth-child(2) th,
+ .dashboard-row-secondary>.card:nth-child(2) td{padding:8px 6px!important;overflow:visible!important;text-overflow:clip!important}
+}
+
 </style>
 </head>
 <body>
