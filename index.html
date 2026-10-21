@@ -372,6 +372,56 @@ td{padding:9px 8px}
  .dashboard-row-secondary>.card:nth-child(2) td{padding:8px 6px!important;overflow:visible!important;text-overflow:clip!important}
 }
 
+
+/* Screenshot audit 2026-10-21: compact desktop notifications and readable transaction headers */
+@media (min-width:1251px) and (max-width:1400px) {
+  .dashboard-row-primary>.card:nth-child(3) .notice {
+    grid-template-columns:32px minmax(0,1fr);
+    gap:8px;
+    padding:6px 0;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice-icon {
+    width:32px;
+    height:32px;
+    font-size:15px;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice .time {
+    max-width:58px;
+    white-space:normal;
+    text-align:right;
+    line-height:1.25;
+    font-size:8px;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice b {
+    padding-right:58px;
+    font-size:10.5px;
+    line-height:1.3;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice p {
+    font-size:9.5px;
+    line-height:1.3;
+  }
+}
+.dashboard-row-secondary>.card:nth-child(2) table {
+  font-size:10.5px!important;
+}
+.dashboard-row-secondary>.card:nth-child(2) th {
+  font-size:10px!important;
+  white-space:normal!important;
+  line-height:1.2;
+  vertical-align:middle;
+}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1) {width:27%!important}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2) {width:17%!important}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(3) {width:19%!important}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(4) {width:18%!important}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5) {width:19%!important}
+
 </style>
 </head>
 <body>
