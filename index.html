@@ -422,6 +422,90 @@ td{padding:9px 8px}
 .dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
 .dashboard-row-secondary>.card:nth-child(2) td:nth-child(5) {width:19%!important}
 
+
+/* LOCKED MOCKUP IMPLEMENTATION — restore aligned dashboard rows and compact panel rhythm */
+@media (min-width:851px) {
+  .dashboard-row {
+    align-items:stretch!important;
+    gap:10px!important;
+    margin:0 0 10px!important;
+  }
+  .dashboard-row>.card {
+    align-self:stretch!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  .dashboard-row-primary>.card:nth-child(1) .chart {height:174px!important}
+  .dashboard-row-primary>.card:nth-child(2) .donut-wrap {min-height:164px!important}
+  .dashboard-row-primary>.card:nth-child(2) .donut {width:112px!important;height:112px!important}
+  .dashboard-row-primary>.card:nth-child(2) .donut:after {inset:23px!important}
+  .dashboard-row-primary>.card:nth-child(2) .legend-list {gap:9px!important}
+  .dashboard-row-primary>.card:nth-child(2) .legend-row {font-size:9px!important;gap:5px!important}
+  .dashboard-row-primary>.card:nth-child(3) .notice {
+    grid-template-columns:36px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    padding:7px 0!important;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice-icon {
+    width:36px!important;height:36px!important;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice .time {
+    position:static!important;max-width:62px!important;
+    white-space:normal!important;text-align:right!important;
+    font-size:9px!important;line-height:1.25!important;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice b {
+    padding-right:0!important;font-size:11px!important;line-height:1.3!important;
+  }
+  .dashboard-row-primary>.card:nth-child(3) .notice p {
+    padding-right:0!important;font-size:10px!important;line-height:1.35!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(1) .stock-row {
+    grid-template-columns:36px minmax(0,1fr) auto auto 10px!important;
+    gap:7px!important;padding:7px 0!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(1) .product-img {
+    width:34px!important;height:34px!important;font-size:20px!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(1) .prod-name {font-size:11px!important}
+  .dashboard-row-secondary>.card:nth-child(1) .prod-sub {font-size:9px!important}
+  .dashboard-row-secondary>.card:nth-child(1) .pill {font-size:9px!important;padding:4px 6px!important}
+  .dashboard-row-secondary>.card:nth-child(2) .table-wrap {overflow:hidden!important}
+  .dashboard-row-secondary>.card:nth-child(2) table {
+    min-width:0!important;width:100%!important;table-layout:fixed!important;
+    font-size:10px!important;white-space:nowrap!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(2) th {
+    font-size:9.5px!important;white-space:normal!important;line-height:1.2!important;
+    padding:8px 4px!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(2) td {
+    padding:7px 4px!important;line-height:1.25!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
+  .dashboard-row-secondary>.card:nth-child(2) td:nth-child(1) {width:29%!important}
+  .dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
+  .dashboard-row-secondary>.card:nth-child(2) td:nth-child(2) {width:18%!important}
+  .dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
+  .dashboard-row-secondary>.card:nth-child(2) td:nth-child(3) {width:18%!important}
+  .dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
+  .dashboard-row-secondary>.card:nth-child(2) td:nth-child(4) {width:17%!important}
+  .dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
+  .dashboard-row-secondary>.card:nth-child(2) td:nth-child(5) {width:18%!important}
+  .dashboard-row-secondary>.card:nth-child(2) td:first-child a {
+    display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .dashboard-row-secondary>.card:nth-child(3) .service-row {
+    grid-template-columns:38px minmax(0,1fr) auto!important;
+    gap:8px!important;padding:8px 0!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(3) .phone {width:35px!important;height:43px!important}
+  .dashboard-row-tertiary>.card:nth-child(1) .branch-bar {margin:12px 0!important}
+  .dashboard-row-tertiary>.card:nth-child(2) .best-grid {gap:6px!important}
+  .dashboard-row-tertiary>.card:nth-child(2) .best {padding:5px!important}
+  .dashboard-row-tertiary>.card:nth-child(3) .activity {padding:7px 0!important}
+}
+
 </style>
 </head>
 <body>
