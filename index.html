@@ -248,6 +248,28 @@ td{padding:9px 8px}
   .dashboard-row .card{border-radius:13px}
 }
 
+
+/* Transaction table: fit the full five-column layout at desktop widths, like the approved mockup. */
+.dashboard-row-secondary>.card:nth-child(2) .table-wrap{overflow-x:auto;max-width:100%}
+.dashboard-row-secondary>.card:nth-child(2) table{width:100%;min-width:0;table-layout:fixed;font-size:9px}
+.dashboard-row-secondary>.card:nth-child(2) th,
+.dashboard-row-secondary>.card:nth-child(2) td{padding:7px 4px;overflow:hidden;text-overflow:ellipsis}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1){width:31%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2){width:20%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(3){width:16%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(4){width:16%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5){width:17%}
+.dashboard-row-secondary>.card:nth-child(2) td:first-child a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:850px){
+  .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px;table-layout:auto}
+  .dashboard-row-secondary>.card:nth-child(2) th,
+  .dashboard-row-secondary>.card:nth-child(2) td{padding:7px 6px}
+}
 </style>
 </head>
 <body>
