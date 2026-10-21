@@ -326,102 +326,65 @@
       #backdrop.show { display: block; }
       #main { margin-left: 0 !important; }
     }
-
-    @media (min-width: 1024px) {
-      #sidebar { transform: translateX(0) !important; }
-    }
   </style>
 </head>
 
 <body class="antialiased text-slate-900">
 
-  <div id="backdrop"
-       class="fixed inset-0 z-40 hidden bg-slate-950/50 lg:hidden"
-       onclick="toggleSidebar(false)"></div>
+  <div id="backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/50 lg:hidden" onclick="toggleSidebar(false)"></div>
 
   <!-- SIDEBAR NAVIGATION -->
-  <aside id="sidebar"
-         class="sidebar fixed inset-y-0 left-0 z-50 flex w-[245px] flex-col text-white">
-
+  <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 z-50 flex w-[245px] flex-col text-white">
     <div class="flex h-[76px] items-center gap-3 border-b border-white/10 px-5">
-      <div class="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-sky-300 to-blue-600 text-2xl font-black">
-        N
-      </div>
+      <div class="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-sky-300 to-blue-600 text-2xl font-black">N</div>
       <div>
         <b class="block text-[18px] tracking-wide">NUSAKARA</b>
         <small class="text-[8px] tracking-[.2em] text-slate-300">ELECTRONICS SYSTEM</small>
       </div>
-      <button class="ml-auto lg:hidden"
-              onclick="toggleSidebar(false)"
-              aria-label="Tutup menu">
+      <button class="ml-auto lg:hidden" onclick="toggleSidebar(false)" aria-label="Tutup menu">
         <i data-lucide="x"></i>
       </button>
     </div>
 
-    <nav class="thin-scroll flex-1 space-y-1 overflow-y-auto px-3 py-4"
-         aria-label="Navigasi utama">
-
+    <nav class="thin-scroll flex-1 space-y-1 overflow-y-auto px-3 py-4" aria-label="Navigasi utama">
       <a href="index.html" class="nav-link" data-page="Dashboard">
-        <i data-lucide="house" class="h-5 w-5"></i>
-        Dashboard
+        <i data-lucide="house" class="h-5 w-5"></i> Dashboard
       </a>
-
       <a href="produk.html" class="nav-link active" data-page="Produk" aria-current="page">
-        <i data-lucide="package" class="h-5 w-5"></i>
-        Produk
+        <i data-lucide="package" class="h-5 w-5"></i> Produk
       </a>
-
       <a href="#" class="nav-link" data-page="Stok & Inventaris">
-        <i data-lucide="warehouse" class="h-5 w-5"></i>
-        Stok &amp; Inventaris
+        <i data-lucide="warehouse" class="h-5 w-5"></i> Stok &amp; Inventaris
       </a>
-
       <a href="#" class="nav-link" data-page="Pembelian">
-        <i data-lucide="shopping-cart" class="h-5 w-5"></i>
-        Pembelian
+        <i data-lucide="shopping-cart" class="h-5 w-5"></i> Pembelian
       </a>
-
       <a href="#" class="nav-link" data-page="Penjualan (POS)">
-        <i data-lucide="credit-card" class="h-5 w-5"></i>
-        Penjualan (POS)
+        <i data-lucide="credit-card" class="h-5 w-5"></i> Penjualan (POS)
       </a>
-
       <a href="#" class="nav-link" data-page="Transaksi">
-        <i data-lucide="receipt-text" class="h-5 w-5"></i>
-        Transaksi
+        <i data-lucide="receipt-text" class="h-5 w-5"></i> Transaksi
       </a>
-
       <a href="#" class="nav-link" data-page="Pelanggan">
-        <i data-lucide="users" class="h-5 w-5"></i>
-        Pelanggan
+        <i data-lucide="users" class="h-5 w-5"></i> Pelanggan
       </a>
-
       <a href="#" class="nav-link" data-page="Servis & Garansi">
-        <i data-lucide="wrench" class="h-5 w-5"></i>
-        Servis &amp; Garansi
+        <i data-lucide="wrench" class="h-5 w-5"></i> Servis &amp; Garansi
       </a>
-
       <a href="#" class="nav-link" data-page="Marketplace">
-        <i data-lucide="store" class="h-5 w-5"></i>
-        Marketplace
+        <i data-lucide="store" class="h-5 w-5"></i> Marketplace
       </a>
-
       <a href="#" class="nav-link" data-page="Laporan">
-        <i data-lucide="chart-no-axes-combined" class="h-5 w-5"></i>
-        Laporan
+        <i data-lucide="chart-no-axes-combined" class="h-5 w-5"></i> Laporan
       </a>
-
       <a href="#" class="nav-link" data-page="Pengaturan">
-        <i data-lucide="settings" class="h-5 w-5"></i>
-        Pengaturan
+        <i data-lucide="settings" class="h-5 w-5"></i> Pengaturan
       </a>
     </nav>
 
     <div class="mt-auto border-t border-white/10 p-3">
       <p class="mb-2 px-2 text-[11px] text-slate-400">Cabang Aktif</p>
-      <button id="branchButton"
-              onclick="document.getElementById('branchMenu').classList.toggle('hidden')"
-              class="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[.06] p-3 text-left hover:bg-white/10">
+      <button id="branchButton" onclick="document.getElementById('branchMenu').classList.toggle('hidden')" class="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[.06] p-3 text-left hover:bg-white/10">
         <i data-lucide="store" class="h-5 w-5"></i>
         <span class="min-w-0 flex-1">
           <b id="activeBranch" class="block text-sm">Majalaya</b>
@@ -430,8 +393,7 @@
         <i data-lucide="chevron-down" class="h-4 w-4"></i>
       </button>
 
-      <div id="branchMenu"
-           class="absolute bottom-[78px] left-3 right-3 hidden rounded-xl border border-white/10 bg-[#0a2230] p-1">
+      <div id="branchMenu" class="absolute bottom-[78px] left-3 right-3 hidden rounded-xl border border-white/10 bg-[#0a2230] p-1">
         <button class="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10" onclick="setBranch('Majalaya')">Majalaya</button>
         <button class="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10" onclick="setBranch('Cimahi')">Cimahi</button>
         <button class="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10" onclick="setBranch('Cicadas')">Cicadas</button>
@@ -451,10 +413,7 @@
 
       <div class="relative max-w-[700px] flex-1">
         <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"></i>
-        <input id="globalSearch"
-               class="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-24 text-sm outline-none focus:border-sky-400 focus:bg-white"
-               placeholder="Cari produk, IMEI, pelanggan, transaksi..."
-               aria-label="Pencarian global">
+        <input id="globalSearch" class="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-24 text-sm outline-none focus:border-sky-400 focus:bg-white" placeholder="Cari produk, IMEI, pelanggan, transaksi..." aria-label="Pencarian global">
         <kbd class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md border bg-white px-2 py-1 text-[10px] text-slate-500">Ctrl + K</kbd>
       </div>
 
@@ -485,21 +444,15 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <button class="btn btn-white" onclick="importProducts()">
-            <i data-lucide="upload" class="h-4 w-4"></i> Import
-          </button>
-          <button class="btn btn-white" onclick="exportProducts()">
-            <i data-lucide="download" class="h-4 w-4"></i> Export
-          </button>
-          <button class="btn btn-primary" onclick="openProductForm()">
-            <i data-lucide="plus" class="h-4 w-4"></i> Tambah Produk
-          </button>
+          <button class="btn btn-white" onclick="importProducts()"><i data-lucide="upload" class="h-4 w-4"></i> Import</button>
+          <button class="btn btn-white" onclick="exportProducts()"><i data-lucide="download" class="h-4 w-4"></i> Export</button>
+          <button class="btn btn-primary" onclick="openProductForm()"><i data-lucide="plus" class="h-4 w-4"></i> Tambah Produk</button>
         </div>
       </section>
 
       <div id="feedback" class="mb-4 hidden rounded-xl border border-sky-100 bg-sky-50 px-4 py-3 text-xs text-sky-800" role="status"></div>
 
-      <!-- FILTER AND CATEGORY TABS (LAYER 04) -->
+      <!-- FILTER AND CATEGORY TABS -->
       <section class="panel mb-4 p-4">
         <div id="categoryTabs" class="thin-scroll mb-4 flex gap-2 overflow-x-auto pb-1">
           <button class="pill active" data-category="Semua">Semua</button>
@@ -581,7 +534,7 @@
         </div>
       </section>
 
-      <!-- KPI CARDS (LAYER 05) -->
+      <!-- KPI CARDS -->
       <section class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <article class="panel flex min-h-[102px] items-center gap-3 p-4">
           <div class="kpi-icon bg-sky-50 text-sky-600"><i data-lucide="package" class="h-6 w-6"></i></div>
@@ -623,11 +576,11 @@
         </article>
       </section>
 
-      <!-- MAIN TABLE + DETAIL PANEL -->
-      <section class="grid grid-cols-1 items-start gap-4 2xl:grid-cols-12">
+      <!-- MAIN TABLE + DETAIL PANEL (FIXED SIDE-BY-SIDE GRID) -->
+      <section class="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
 
-        <!-- TABLE LIST (LAYER 06) -->
-        <article class="panel min-w-0 overflow-hidden 2xl:col-span-8">
+        <!-- TABLE LIST -->
+        <article class="panel min-w-0 overflow-hidden xl:col-span-7">
           <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
             <div>
               <h2 class="font-bold">Daftar Produk</h2>
@@ -645,11 +598,11 @@
           </div>
 
           <div class="thin-scroll overflow-x-auto">
-            <table class="w-full min-w-[900px] border-collapse text-left">
+            <table class="w-full min-w-[750px] border-collapse text-left">
               <thead class="table-head">
                 <tr>
                   <th class="w-10 px-3 py-3">
-                    <input id="selectAll" type="checkbox" aria-label="Pilih semua produk" class="h-4 w-4 rounded border-slate-300 accent-sky-600">
+                    <input id="selectAll" type="checkbox" aria-label="Pilih semua" class="h-4 w-4 rounded border-slate-300 accent-sky-600">
                   </th>
                   <th class="px-2 py-3">Produk</th>
                   <th class="px-2 py-3">Kategori</th>
@@ -685,8 +638,8 @@
           </div>
         </article>
 
-        <!-- PRODUCT CARD & DETAIL INFO (LAYER 07 & 08) -->
-        <aside class="panel min-w-0 overflow-hidden 2xl:sticky 2xl:top-[82px] 2xl:col-span-4">
+        <!-- PRODUCT DETAIL PANEL (STICKY ON RIGHT) -->
+        <aside class="panel min-w-0 overflow-hidden xl:sticky xl:top-[82px] xl:col-span-5">
           <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
             <div>
               <h2 class="font-bold">Detail Produk</h2>
@@ -701,7 +654,7 @@
                 <img class="thumb" src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=160&q=80" alt="Thumb 1" onclick="changeDetailImage(this.src)">
                 <img class="thumb" src="https://images.unsplash.com/photo-1511709268805-1e4a3e6a9a3f?auto=format&fit=crop&w=160&q=80" alt="Thumb 2" onclick="changeDetailImage(this.src)">
                 <img class="thumb" src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=160&q=80" alt="Thumb 3" onclick="changeDetailImage(this.src)">
-                <button class="grid h-[34px] place-items-center rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-500" onclick="toast('Galeri galeri demo.')">+4</button>
+                <button class="grid h-[34px] place-items-center rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-500">+4</button>
               </div>
 
               <div class="relative min-w-0">
@@ -731,11 +684,8 @@
               <button class="detail-tab" data-tab="history">Riwayat</button>
             </div>
 
-            <div id="detailContent" class="min-h-[200px] pt-2">
-              <!-- Rendered via JS -->
-            </div>
+            <div id="detailContent" class="min-h-[170px] pt-2"></div>
 
-            <!-- STOCK & LOCATION -->
             <div class="mt-4 grid grid-cols-2 gap-2">
               <div class="rounded-xl border border-slate-200 p-3">
                 <div class="flex items-center gap-2">
@@ -762,10 +712,9 @@
               </div>
             </div>
 
-            <!-- ACTION BUTTONS (LAYER 09) -->
             <div class="mt-3 grid grid-cols-[1fr_1fr_38px] gap-2">
               <button class="btn btn-white !px-2" onclick="editSelectedProduct()">
-                <i data-lucide="pencil" class="h-4 w-4"></i> Edit Produk
+                <i data-lucide="pencil" class="h-4 w-4"></i> Edit
               </button>
               <button class="btn btn-primary !px-2" onclick="adjustStock()">
                 <i data-lucide="package-plus" class="h-4 w-4"></i> Atur Stok
@@ -775,8 +724,7 @@
                   <i data-lucide="ellipsis" class="h-5 w-5"></i>
                 </button>
                 <div id="detailActionMenu" class="dropdown-menu hidden">
-                  <button onclick="duplicateSelectedProduct()">Duplikat Produk</button>
-                  <button onclick="toast('Tautan disalin.')">Salin Tautan</button>
+                  <button onclick="duplicateSelectedProduct()">Duplikat</button>
                   <button onclick="deactivateSelectedProduct()">Nonaktifkan</button>
                 </div>
               </div>
@@ -944,7 +892,7 @@
               <input type="checkbox" class="row-check h-4 w-4 rounded border-slate-300 accent-sky-600" data-id="${p.id}">
             </td>
             <td class="px-2 py-2">
-              <div class="flex min-w-[190px] items-center gap-2.5">
+              <div class="flex min-w-[170px] items-center gap-2.5">
                 <img class="product-image" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">
                 <div class="min-w-0">
                   <b class="block text-[10px] text-slate-800">${escapeHtml(p.name)}</b>
@@ -997,7 +945,8 @@
       const status = document.getElementById('statusFilter').value;
 
       filteredProducts = products.filter(p => {
-        const text = [p.name, p.variant, p.sku, p.brand, p.category].join(' ').toLowerCase();        return (!query || text.includes(query)) &&
+        const text = [p.name, p.variant, p.sku, p.brand, p.category].join(' ').toLowerCase();
+        return (!query || text.includes(query)) &&
           (!brand || p.brand === brand) &&
           (!category || p.category === category) &&
           (!status || p.status === status) &&
