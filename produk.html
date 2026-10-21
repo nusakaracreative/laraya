@@ -446,7 +446,9 @@
         <div class="flex flex-wrap items-center gap-2">
           <button class="btn btn-white" onclick="importProducts()"><i data-lucide="upload" class="h-4 w-4"></i> Import</button>
           <button class="btn btn-white" onclick="exportProducts()"><i data-lucide="download" class="h-4 w-4"></i> Export</button>
-          <button class="btn btn-primary" onclick="openProductForm()"><i data-lucide="plus" class="h-4 w-4"></i> Tambah Produk</button>
+          <button class="btn btn-primary" onclick="openProductForm()">
+            <i data-lucide="plus" class="h-4 w-4"></i> Tambah Produk <i data-lucide="chevron-down" class="h-3.5 w-3.5 opacity-80"></i>
+          </button>
         </div>
       </section>
 
@@ -576,7 +578,7 @@
         </article>
       </section>
 
-      <!-- MAIN TABLE + DETAIL PANEL (FIXED SIDE-BY-SIDE GRID) -->
+      <!-- MAIN TABLE + DETAIL PANEL -->
       <section class="grid grid-cols-1 items-start gap-4 xl:grid-cols-12">
 
         <!-- TABLE LIST -->
@@ -624,21 +626,20 @@
               <span>Tampilkan</span>
               <select id="pageSize" class="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-[11px]">
                 <option value="5">5</option>
-                <option value="8" selected>8</option>
-                <option value="10">10</option>
+                <option value="10" selected>10</option>
                 <option value="20">20</option>
               </select>
               <span>data per halaman</span>
             </div>
 
             <div class="flex flex-wrap items-center justify-between gap-2 sm:justify-end">
-              <span id="pageInfo" class="text-[10px] text-slate-500">Menampilkan 1–8 dari 2.856 data</span>
+              <span id="pageInfo" class="text-[10px] text-slate-500">Menampilkan 1–10 dari 2.856 data</span>
               <div id="pagination" class="flex items-center gap-1"></div>
             </div>
           </div>
         </article>
 
-        <!-- PRODUCT DETAIL PANEL (STICKY ON RIGHT) -->
+        <!-- PRODUCT DETAIL PANEL -->
         <aside class="panel min-w-0 overflow-hidden xl:sticky xl:top-[82px] xl:col-span-5">
           <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
             <div>
@@ -996,8 +997,7 @@
 
     function renderDetailTab(tab) {
       const p = products.find(item => item.id === selectedId);
-      if (!p) return;
-      const content = document.getElementById('detailContent');
+      if (!p) return;      const content = document.getElementById('detailContent');
 
       if (tab === 'detail') {
         content.innerHTML = `
@@ -1006,7 +1006,14 @@
           <div class="spec-row"><span class="text-slate-500">Merek</span><b>${escapeHtml(p.brand)}</b></div>
           <div class="spec-row"><span class="text-slate-500">Model</span><b>${escapeHtml(p.model)}</b></div>
           <div class="spec-row"><span class="text-slate-500">RAM / Storage</span><b>${escapeHtml(p.storage)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Warna</span><b>${escapeHtml(p.color)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Warna</span>
+            <span class="flex items-center gap-1.5">
+              <span class="h-3 w-3 rounded-full bg-blue-600 inline-block border border-slate-200"></span>
+              <span class="h-3 w-3 rounded-full bg-sky-700 inline-block border border-slate-200"></span>
+              <span class="h-3 w-3 rounded-full bg-slate-900 inline-block border border-slate-200"></span>
+              <b>${escapeHtml(p.color)}</b>
+            </span>
+          </div>
           <div class="spec-row"><span class="text-slate-500">Kondisi</span><b>${escapeHtml(p.condition)}</b></div>`;
       } else if (tab === 'stock') {
         content.innerHTML = `
