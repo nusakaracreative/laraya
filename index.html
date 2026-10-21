@@ -240,9 +240,8 @@ td{padding:9px 8px}
 .filter-feedback:empty{display:none!important}
 @media (min-width:561px) and (max-width:850px){
   .sidebar{overflow-y:auto;overscroll-behavior:contain}
-  .brand{height:48px;min-height:48px;justify-content:center;padding:0!important}
-  .brand-lockup{justify-content:center;width:42px;height:42px}
-  .brand-lockup img{width:42px;height:42px;max-width:42px;max-height:42px;object-fit:cover;object-position:left center}
+  /* Do not crop the full wordmark into a square on collapsed tablet navigation. */
+  .brand{display:none}
   .nav{max-height:calc(100vh - 155px);overflow-y:auto;align-content:start;overscroll-behavior:contain}
   .branch{flex-shrink:0}
 }
