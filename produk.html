@@ -236,6 +236,8 @@
       cursor: pointer;
     }
 
+    .thumb.active { border-color: #0875ca; box-shadow: 0 0 0 2px rgba(8,117,202,.12); }
+
     .detail-tab {
       padding: 11px 7px;
       border-bottom: 2px solid transparent;
@@ -542,7 +544,7 @@
           <div class="kpi-icon bg-sky-50 text-sky-600"><i data-lucide="package" class="h-6 w-6"></i></div>
           <div class="min-w-0 flex-1">
             <p class="text-xs text-slate-500">Total Produk</p>
-            <b class="mt-1 block text-xl tracking-tight">2.856</b>
+            <b id="kpiTotal" class="mt-1 block text-xl tracking-tight">8</b>
             <small class="text-[10px] text-slate-400">dari bulan lalu</small>
           </div>
           <span class="status status-green">↑ 8%</span>
@@ -552,7 +554,7 @@
           <div class="kpi-icon bg-cyan-50 text-cyan-600"><i data-lucide="warehouse" class="h-6 w-6"></i></div>
           <div class="min-w-0 flex-1">
             <p class="text-xs text-slate-500">Stok Tersedia</p>
-            <b class="mt-1 block whitespace-nowrap text-xl tracking-tight">1.248 unit</b>
+            <b id="kpiStock" class="mt-1 block whitespace-nowrap text-xl tracking-tight">54 unit</b>
             <small class="text-[10px] text-slate-400">dari minggu lalu</small>
           </div>
           <span class="status status-red">↓ 3%</span>
@@ -562,7 +564,7 @@
           <div class="kpi-icon bg-teal-50 text-teal-600"><i data-lucide="package-check" class="h-6 w-6"></i></div>
           <div class="min-w-0 flex-1">
             <p class="text-xs text-slate-500">Produk Aktif</p>
-            <b class="mt-1 block text-xl tracking-tight">2.710</b>
+            <b id="kpiActive" class="mt-1 block text-xl tracking-tight">8</b>
             <small class="text-[10px] text-slate-400">dari bulan lalu</small>
           </div>
           <span class="status status-green">↑ 5%</span>
@@ -572,7 +574,7 @@
           <div class="kpi-icon bg-slate-100 text-slate-500"><i data-lucide="package-x" class="h-6 w-6"></i></div>
           <div class="min-w-0 flex-1">
             <p class="text-xs text-slate-500">Produk Nonaktif</p>
-            <b class="mt-1 block text-xl tracking-tight">146</b>
+            <b id="kpiInactive" class="mt-1 block text-xl tracking-tight">0</b>
             <small class="text-[10px] text-slate-400">perlu ditinjau</small>
           </div>
         </article>
@@ -726,7 +728,7 @@
                 </button>
                 <div id="detailActionMenu" class="dropdown-menu hidden">
                   <button onclick="duplicateSelectedProduct()">Duplikat</button>
-                  <button onclick="deactivateSelectedProduct()">Nonaktifkan</button>
+                  <button id="toggleActiveButton" onclick="deactivateSelectedProduct()">Nonaktifkan</button>
                 </div>
               </div>
             </div>
@@ -743,7 +745,7 @@
   </main>
 
   <!-- PRODUCT FORM MODAL -->
-  <div id="productModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/50 p-4" role="dialog" aria-modal="true">
+  <div id="productModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-950/50 p-4" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" onclick="if (event.target === this) closeProductForm()">
     <div class="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl">
       <div class="mb-4 flex items-start justify-between gap-3">
         <div>
@@ -757,7 +759,7 @@
         <input id="formId" type="hidden">
         <label class="block">
           <span class="mb-1 block text-xs font-medium">Nama Produk</span>
-          <input id="formName" class="field" required placeholder="Contoh: Samsung A54 5G">
+          <input id="formName" class="field" required minlength="2" maxlength="120" autocomplete="off" placeholder="Contoh: Samsung A54 5G">
         </label>
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label>
@@ -774,19 +776,19 @@
           </label>
           <label>
             <span class="mb-1 block text-xs font-medium">Merek</span>
-            <input id="formBrand" class="field" required placeholder="Merek produk">
+            <input id="formBrand" class="field" required maxlength="80" autocomplete="off" placeholder="Merek produk">
           </label>
           <label>
             <span class="mb-1 block text-xs font-medium">SKU</span>
-            <input id="formSku" class="field" required placeholder="SKU-001">
+            <input id="formSku" class="field" required minlength="2" maxlength="60" autocomplete="off" placeholder="SKU-001">
           </label>
           <label>
             <span class="mb-1 block text-xs font-medium">Harga Jual (Rp)</span>
-            <input id="formPrice" class="field" type="number" min="0" required placeholder="3150000">
+            <input id="formPrice" class="field" type="number" min="1" step="1" inputmode="numeric" required placeholder="3150000">
           </label>
           <label>
             <span class="mb-1 block text-xs font-medium">Stok</span>
-            <input id="formStock" class="field" type="number" min="0" required placeholder="5">
+            <input id="formStock" class="field" type="number" min="0" step="1" inputmode="numeric" required placeholder="5">
           </label>
           <label>
             <span class="mb-1 block text-xs font-medium">Status</span>
@@ -809,13 +811,17 @@
   <div id="toast" role="status" class="pointer-events-none fixed bottom-5 right-5 z-[70] translate-y-3 rounded-xl bg-slate-900 px-4 py-3 text-sm text-white opacity-0 shadow-lg"></div>
 
   <script>
-    const phoneImage = 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=300&q=80';
-    const accessoryImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80';
-    const laptopImage = 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=300&q=80';
-    const tvImage = 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=300&q=80';
-    const washerImage = 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&q=80';
+  (() => {
+    'use strict';
 
-    let products = [
+    const STORAGE_KEY = 'nusakara.electronics.products.v1';
+    const phoneImage = 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=700&q=85';
+    const accessoryImage = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=85';
+    const laptopImage = 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=85';
+    const tvImage = 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=700&q=85';
+    const washerImage = 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=700&q=85';
+
+    const seedProducts = [
       { id: 1, name: 'Samsung A54 5G', variant: '8GB / 256GB · Awesome Blue', category: 'HP', brand: 'Samsung', sku: 'HP-005', price: 3150000, stock: 5, status: 'Tersedia', active: true, condition: 'Baru', model: 'Galaxy A54 5G', storage: '8GB / 256GB', color: 'Awesome Blue', location: 'Rak HP A2', image: phoneImage },
       { id: 2, name: 'iPhone 11 128GB', variant: 'Black', category: 'HP', brand: 'Apple', sku: 'HP-001', price: 4250000, stock: 3, status: 'Tersedia', active: true, condition: 'Bekas', model: 'iPhone 11', storage: '128GB', color: 'Black', location: 'Rak HP A1', image: phoneImage },
       { id: 3, name: 'OPPO Reno 7', variant: '8GB / 256GB · Startrails Blue', category: 'HP', brand: 'OPPO', sku: 'HP-007', price: 2850000, stock: 2, status: 'Tersedia', active: true, condition: 'Bekas', model: 'Reno 7', storage: '8GB / 256GB', color: 'Startrails Blue', location: 'Rak HP A3', image: phoneImage },
@@ -826,355 +832,804 @@
       { id: 8, name: 'Samsung 43” Smart TV', variant: '4K UHD', category: 'TV & Audio', brand: 'Samsung', sku: 'TV-001', price: 4850000, stock: 2, status: 'Menipis', active: true, condition: 'Baru', model: 'Smart TV 43 inch', storage: '-', color: 'Black', location: 'Rak TV C1', image: tvImage }
     ];
 
-    let selectedId = 1;
-    let currentPage = 1;
-    let activeCategory = 'Semua';
-    let filteredProducts = [...products];
-    let toastTimer = null;
+    const state = {
+      products: loadProducts(),
+      filteredProducts: [],
+      selectedId: 1,
+      currentPage: 1,
+      activeCategory: 'Semua',
+      activeDetailTab: 'detail',
+      selectedIds: new Set(),
+      toastTimer: null,
+      modalReturnFocus: null
+    };
 
-    const rupiah = val => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(Number(val) || 0);
-    const escapeHtml = val => String(val ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+    const rupiah = value => new Intl.NumberFormat('id-ID', {
+      style: 'currency', currency: 'IDR', maximumFractionDigits: 0
+    }).format(Number(value) || 0);
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+    const isIntegerAtLeast = (value, min = 0) => Number.isSafeInteger(Number(value)) && Number(value) >= min;
 
-    function toast(msg) {
-      const el = document.getElementById('toast');
-      el.textContent = msg;
-      el.classList.remove('opacity-0', 'translate-y-3');
-      el.classList.add('opacity-100', 'translate-y-0');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        el.classList.add('opacity-0', 'translate-y-3');
-        el.classList.remove('opacity-100', 'translate-y-0');
-      }, 2600);
+    function imageForCategory(category) {
+      if (category === 'Aksesoris') return accessoryImage;
+      if (category === 'Laptop & Tablet') return laptopImage;
+      if (category === 'TV & Audio') return tvImage;
+      if (category === 'Kulkas & Mesin Cuci') return washerImage;
+      return phoneImage;
+    }
+
+    function makeGallery(product) {
+      const candidate = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : [];
+      const mainImage = product.image || imageForCategory(product.category);
+      const images = [mainImage, ...candidate].filter((url, index, arr) => arr.indexOf(url) === index);
+      while (images.length < 3) images.push(mainImage);
+      return images.slice(0, 6);
+    }
+
+    function normalizeProduct(raw, index = 0) {
+      const product = raw && typeof raw === 'object' ? raw : {};
+      const stock = isIntegerAtLeast(product.stock) ? Number(product.stock) : 0;
+      const status = ['Tersedia', 'Menipis', 'Habis', 'Nonaktif'].includes(product.status)
+        ? product.status : (stock === 0 ? 'Habis' : stock <= 3 ? 'Menipis' : 'Tersedia');
+      const active = product.active !== false && status !== 'Nonaktif';
+      const normalized = {
+        id: Number.isSafeInteger(Number(product.id)) ? Number(product.id) : index + 1,
+        name: String(product.name || 'Produk tanpa nama'),
+        variant: String(product.variant || 'Standar'),
+        category: String(product.category || 'Lainnya'),
+        brand: String(product.brand || 'Generic'),
+        sku: String(product.sku || `SKU-${index + 1}`),
+        price: isIntegerAtLeast(product.price) ? Number(product.price) : 0,
+        stock,
+        status: active ? status : 'Nonaktif',
+        active,
+        condition: String(product.condition || 'Baru'),
+        model: String(product.model || product.name || '—'),
+        storage: String(product.storage || '—'),
+        color: String(product.color || '—'),
+        location: String(product.location || 'Rak Umum'),
+        image: String(product.image || imageForCategory(product.category)),
+        gallery: Array.isArray(product.gallery) ? product.gallery.filter(url => typeof url === 'string' && url) : [],
+        imei: String(product.imei || ''),
+        history: Array.isArray(product.history) ? product.history.slice(-50) : []
+      };
+      if (!normalized.gallery.length) normalized.gallery = [normalized.image];
+      return normalized;
+    }
+
+    function loadProducts() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizeProduct);
+        }
+      } catch (error) {
+        console.warn('Data produk lokal tidak dapat dibaca; menggunakan data contoh.', error);
+      }
+      return seedProducts.map(normalizeProduct);
+    }
+
+    function persistProducts() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.products));
+        return true;
+      } catch (error) {
+        console.error('Data produk gagal disimpan ke penyimpanan browser.', error);
+        toast('Perubahan hanya tersimpan sementara. Penyimpanan browser tidak tersedia.');
+        return false;
+      }
+    }
+
+    function addHistory(product, action, detail = '') {
+      if (!Array.isArray(product.history)) product.history = [];
+      product.history.push({
+        date: new Date().toISOString(),
+        action,
+        detail: String(detail || '')
+      });
+      product.history = product.history.slice(-50);
+    }
+
+    function toast(message) {
+      const element = $('#toast');
+      if (!element) return;
+      element.textContent = message;
+      element.classList.remove('opacity-0', 'translate-y-3');
+      element.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(state.toastTimer);
+      state.toastTimer = setTimeout(() => {
+        element.classList.add('opacity-0', 'translate-y-3');
+        element.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
     }
 
     function toggleSidebar(open) {
-      document.getElementById('sidebar').classList.toggle('open', open);
-      document.getElementById('backdrop').classList.toggle('show', open);
+      $('#sidebar').classList.toggle('open', Boolean(open));
+      $('#backdrop').classList.toggle('show', Boolean(open));
+      $('#backdrop').classList.toggle('hidden', !open);
     }
 
-    function setBranch(val) {
-      document.getElementById('activeBranch').textContent = val;
-      document.getElementById('branchSub').textContent = val;
-      document.getElementById('branchMenu').classList.add('hidden');
-      toast('Cabang aktif: ' + val);
+    function setBranch(value) {
+      $('#activeBranch').textContent = value;
+      $('#branchSub').textContent = value;
+      $('#branchMenu').classList.add('hidden');
+      toast(`Cabang aktif: ${value}`);
     }
 
-    function statusClass(st) {
-      if (st === 'Tersedia') return 'status-green';
-      if (st === 'Menipis') return 'status-amber';
-      if (st === 'Habis') return 'status-red';
+    function statusClass(status) {
+      if (status === 'Tersedia') return 'status-green';
+      if (status === 'Menipis') return 'status-amber';
+      if (status === 'Habis') return 'status-red';
       return 'status-gray';
     }
 
-    function statusBadge(st) {
-      return `<span class="status ${statusClass(st)}"><span class="status-dot"></span>${escapeHtml(st)}</span>`;
+    function statusBadge(status) {
+      return `<span class="status ${statusClass(status)}"><span class="status-dot"></span>${escapeHtml(status)}</span>`;
     }
 
-    function categoryBadge(cat) {
-      return `<span class="inline-flex rounded-lg px-2 py-1 text-[9px] font-semibold bg-sky-100 text-sky-700">${escapeHtml(cat)}</span>`;
+    function categoryBadge(category) {
+      return `<span class="inline-flex rounded-lg bg-sky-100 px-2 py-1 text-[9px] font-semibold text-sky-700">${escapeHtml(category)}</span>`;
     }
 
-    function renderTable() {
-      const pageSize = Number(document.getElementById('pageSize').value);
-      const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
-      currentPage = Math.min(currentPage, totalPages);
-      currentPage = Math.max(1, currentPage);
+    function syncCategoryTabs() {
+      $$('#categoryTabs .pill').forEach(button => {
+        const active = button.dataset.category === state.activeCategory;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
 
-      const start = (currentPage - 1) * pageSize;
-      const visible = filteredProducts.slice(start, start + pageSize);
-      const tbody = document.getElementById('productTable');
+    function renderKpis() {
+      const total = state.products.length;
+      const available = state.products.reduce((sum, product) => sum + (product.active ? product.stock : 0), 0);
+      const activeCount = state.products.filter(product => product.active).length;
+      const inactiveCount = total - activeCount;
+      $('#kpiTotal').textContent = total.toLocaleString('id-ID');
+      $('#kpiStock').textContent = `${available.toLocaleString('id-ID')} unit`;
+      $('#kpiActive').textContent = activeCount.toLocaleString('id-ID');
+      $('#kpiInactive').textContent = inactiveCount.toLocaleString('id-ID');
+    }
 
-      if (!visible.length) {
-        tbody.innerHTML = `<tr><td colspan="9" class="px-4 py-12 text-center text-slate-400">Produk tidak ditemukan.</td></tr>`;
-      } else {
-        tbody.innerHTML = visible.map(p => `
-          <tr class="product-row ${p.id === selectedId ? 'selected' : ''}" onclick="selectProduct(${p.id})">
-            <td class="px-3 py-2.5" onclick="event.stopPropagation()">
-              <input type="checkbox" class="row-check h-4 w-4 rounded border-slate-300 accent-sky-600" data-id="${p.id}">
-            </td>
-            <td class="px-2 py-2">
-              <div class="flex min-w-[170px] items-center gap-2.5">
-                <img class="product-image" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">
-                <div class="min-w-0">
-                  <b class="block text-[10px] text-slate-800">${escapeHtml(p.name)}</b>
-                  <span class="mt-1 block text-[9px] text-slate-500">${escapeHtml(p.variant)}</span>
-                </div>
-              </div>
-            </td>
-            <td class="px-2 py-2">${categoryBadge(p.category)}</td>
-            <td class="px-2 py-2 text-slate-600">${escapeHtml(p.brand)}</td>
-            <td class="px-2 py-2 font-medium text-slate-600">${escapeHtml(p.sku)}</td>
-            <td class="whitespace-nowrap px-2 py-2 font-semibold text-slate-800">${rupiah(p.price)}</td>
-            <td class="whitespace-nowrap px-2 py-2 text-slate-600">${p.stock} unit</td>
-            <td class="px-2 py-2">${statusBadge(p.status)}</td>
-            <td class="px-2 py-2" onclick="event.stopPropagation()">
-              <button class="grid h-8 w-7 place-items-center rounded-lg hover:bg-slate-100" onclick="selectProduct(${p.id});editSelectedProduct()">
-                <i data-lucide="pencil" class="h-3.5 w-3.5 text-slate-500"></i>
-              </button>
-            </td>
-          </tr>
-        `).join('');
+    function applyFilters(options = {}) {
+      const query = ($('#productSearch').value || '').trim().toLocaleLowerCase('id-ID');
+      const globalQuery = ($('#globalSearch').value || '').trim().toLocaleLowerCase('id-ID');      const searchTerms = [...query.split(/\s+/), ...globalQuery.split(/\s+/)].filter(Boolean);
+      const brand = $('#brandFilter').value;
+      const category = $('#categoryFilter').value;
+      const status = $('#statusFilter').value;
+      const minRaw = $('#minPrice').value.trim();
+      const maxRaw = $('#maxPrice').value.trim();
+      const minPrice = minRaw === '' ? null : Number(minRaw);
+      const maxPrice = maxRaw === '' ? null : Number(maxRaw);
+
+      state.filteredProducts = state.products.filter(product => {
+        const searchable = [product.name, product.variant, product.sku, product.brand, product.category, product.model, product.imei].join(' ').toLocaleLowerCase('id-ID');
+        const effectiveCategory = category || state.activeCategory;
+        return searchTerms.every(term => searchable.includes(term)) &&
+          (!brand || product.brand === brand) &&
+          (!effectiveCategory || effectiveCategory === 'Semua' || product.category === effectiveCategory) &&
+          (!status || product.status === status) &&
+          (minPrice === null || (Number.isFinite(minPrice) && product.price >= minPrice)) &&
+          (maxPrice === null || (Number.isFinite(maxPrice) && product.price <= maxPrice));
+      });
+
+      state.currentPage = options.keepPage ? state.currentPage : 1;
+      if (state.filteredProducts.length && !state.filteredProducts.some(product => product.id === state.selectedId)) {
+        state.selectedId = state.filteredProducts[0].id;
       }
-
-      const from = filteredProducts.length ? start + 1 : 0;
-      const to = Math.min(start + pageSize, filteredProducts.length);
-      document.getElementById('pageInfo').textContent = `Menampilkan ${from}–${to} dari ${filteredProducts.length} data`;
-      renderPagination(totalPages);
-      lucide.createIcons();
+      renderTable();
+      renderDetailPanel();
+      renderKpis();
+      syncCategoryTabs();
     }
 
     function renderPagination(totalPages) {
-      const container = document.getElementById('pagination');
-      let html = `<button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})"><i data-lucide="chevron-left" class="h-4 w-4"></i></button>`;
-      for (let i = 1; i <= totalPages; i++) {
-        html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
-      }
-      html += `<button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})"><i data-lucide="chevron-right" class="h-4 w-4"></i></button>`;
-      container.innerHTML = html;
-      lucide.createIcons();
-    }
-
-    function goToPage(p) {
-      currentPage = p;
-      renderTable();
-    }
-
-    function applyFilters() {
-      const query = document.getElementById('productSearch').value.trim().toLowerCase();
-      const brand = document.getElementById('brandFilter').value;
-      const category = document.getElementById('categoryFilter').value;
-      const status = document.getElementById('statusFilter').value;
-
-      filteredProducts = products.filter(p => {
-        const text = [p.name, p.variant, p.sku, p.brand, p.category].join(' ').toLowerCase();
-        return (!query || text.includes(query)) &&
-          (!brand || p.brand === brand) &&
-          (!category || p.category === category) &&
-          (!status || p.status === status) &&
-          (activeCategory === 'Semua' || p.category === activeCategory);
+      const container = $('#pagination');
+      const pages = new Set([1, totalPages]);
+      for (let page = Math.max(1, state.currentPage - 2); page <= Math.min(totalPages, state.currentPage + 2); page += 1) pages.add(page);
+      const sorted = [...pages].sort((a, b) => a - b);
+      const sequence = [];
+      sorted.forEach((page, index) => {
+        if (index > 0 && page - sorted[index - 1] > 1) sequence.push('ellipsis');
+        sequence.push(page);
       });
-
-      currentPage = 1;
-      renderTable();
+      const parts = [
+        `<button type="button" class="pagination-btn" data-page="${state.currentPage - 1}" aria-label="Halaman sebelumnya" ${state.currentPage <= 1 ? 'disabled' : ''}><i data-lucide="chevron-left" class="h-4 w-4"></i></button>`
+      ];
+      sequence.forEach(page => {
+        if (page === 'ellipsis') parts.push('<span class="px-1 text-slate-400" aria-hidden="true">…</span>');
+        else parts.push(`<button type="button" class="pagination-btn ${page === state.currentPage ? 'active' : ''}" data-page="${page}" aria-current="${page === state.currentPage ? 'page' : 'false'}">${page}</button>`);
+      });
+      parts.push(`<button type="button" class="pagination-btn" data-page="${state.currentPage + 1}" aria-label="Halaman berikutnya" ${state.currentPage >= totalPages ? 'disabled' : ''}><i data-lucide="chevron-right" class="h-4 w-4"></i></button>`);
+      container.innerHTML = parts.join('');
     }
 
-    function resetFilters() {
-      document.getElementById('productSearch').value = '';
-      document.getElementById('brandFilter').value = '';
-      document.getElementById('categoryFilter').value = '';
-      document.getElementById('statusFilter').value = '';
-      activeCategory = 'Semua';
-      document.querySelectorAll('#categoryTabs .pill').forEach(btn => btn.classList.toggle('active', btn.dataset.category === 'Semua'));
-      applyFilters();
-      toast('Filter direset.');
+    function renderTable() {
+      const pageSize = Number($('#pageSize').value) || 10;
+      const totalPages = Math.max(1, Math.ceil(state.filteredProducts.length / pageSize));
+      state.currentPage = Math.max(1, Math.min(state.currentPage, totalPages));
+      const start = (state.currentPage - 1) * pageSize;
+      const visible = state.filteredProducts.slice(start, start + pageSize);
+      const body = $('#productTable');
+
+      if (!visible.length) {
+        body.innerHTML = '<tr><td colspan="9" class="px-4 py-12 text-center text-slate-400">Produk tidak ditemukan.</td></tr>';
+      } else {
+        body.innerHTML = visible.map(product => `
+          <tr class="product-row ${product.id === state.selectedId ? 'selected' : ''}" data-product-id="${product.id}" tabindex="0" aria-selected="${product.id === state.selectedId}">
+            <td class="px-3 py-2.5" data-stop-row>
+              <input type="checkbox" class="row-check h-4 w-4 rounded border-slate-300 accent-sky-600" data-id="${product.id}" aria-label="Pilih ${escapeHtml(product.name)}" ${state.selectedIds.has(product.id) ? 'checked' : ''}>
+            </td>
+            <td class="px-2 py-2">
+              <div class="flex min-w-[170px] items-center gap-2.5">
+                <img class="product-image" src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy">
+                <div class="min-w-0">
+                  <b class="block text-[10px] text-slate-800">${escapeHtml(product.name)}</b>
+                  <span class="mt-1 block text-[9px] text-slate-500">${escapeHtml(product.variant)}</span>
+                </div>
+              </div>
+            </td>
+            <td class="px-2 py-2">${categoryBadge(product.category)}</td>
+            <td class="px-2 py-2 text-slate-600">${escapeHtml(product.brand)}</td>
+            <td class="px-2 py-2 font-medium text-slate-600">${escapeHtml(product.sku)}</td>
+            <td class="whitespace-nowrap px-2 py-2 font-semibold text-slate-800">${rupiah(product.price)}</td>
+            <td class="whitespace-nowrap px-2 py-2 text-slate-600">${product.stock.toLocaleString('id-ID')} unit</td>
+            <td class="px-2 py-2">${statusBadge(product.status)}</td>
+            <td class="px-2 py-2" data-stop-row>
+              <button type="button" class="grid h-8 w-7 place-items-center rounded-lg hover:bg-slate-100" data-action="edit" aria-label="Edit ${escapeHtml(product.name)}"><i data-lucide="pencil" class="h-3.5 w-3.5 text-slate-500"></i></button>
+            </td>
+          </tr>`).join('');
+      }
+
+      const from = state.filteredProducts.length ? start + 1 : 0;
+      const to = Math.min(start + pageSize, state.filteredProducts.length);
+      $('#pageInfo').textContent = `Menampilkan ${from}–${to} dari ${state.filteredProducts.length} data`;
+      const selectAll = $('#selectAll');
+      selectAll.checked = visible.length > 0 && visible.every(product => state.selectedIds.has(product.id));
+      selectAll.indeterminate = visible.some(product => state.selectedIds.has(product.id)) && !selectAll.checked;
+      renderPagination(totalPages);
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function getSelectedProduct() {
+      return state.products.find(product => product.id === state.selectedId) || null;
+    }
+
+    function getColorSwatches(color) {
+      const value = String(color || '').toLocaleLowerCase('id-ID');
+      if (/(blue|biru|cyan|navy)/.test(value)) return ['#60a5fa', '#0ea5e9', '#1e3a8a'];
+      if (/(white|putih|silver|cream)/.test(value)) return ['#ffffff', '#dbe4ee', '#94a3b8'];
+      if (/(green|hijau|teal|tosca)/.test(value)) return ['#86efac', '#14b8a6', '#166534'];
+      if (/(red|merah|pink|rose)/.test(value)) return ['#fca5a5', '#f43f5e', '#9f1239'];
+      if (/(gold|emas|yellow|kuning)/.test(value)) return ['#fde68a', '#eab308', '#a16207'];
+      if (/(purple|ungu|violet)/.test(value)) return ['#c4b5fd', '#8b5cf6', '#4c1d95'];
+      if (/(black|hitam|midnight|graphite)/.test(value)) return ['#64748b', '#334155', '#0f172a'];
+      return ['#cbd5e1', '#94a3b8', '#475569'];
+    }
+
+    function renderThumbnails(product) {
+      const thumbnails = $('#detailThumbnails');
+      const images = makeGallery(product);
+      thumbnails.innerHTML = images.slice(0, 3).map((url, index) => `
+        <button type="button" class="rounded-lg" data-gallery-image="${index}" aria-label="Tampilkan gambar ${index + 1}">
+          <img class="thumb ${index === 0 ? 'active' : ''}" src="${escapeHtml(url)}" alt="${escapeHtml(product.name)} gambar ${index + 1}" loading="lazy">
+        </button>`).join('') + `<span class="grid h-[34px] place-items-center rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-500">${images.length > 3 ? `+${images.length - 3}` : 'Galeri'}</span>`;
+      $('#detailImage').src = images[0];
+      $('#detailImage').alt = product.name;
+    }
+
+    function renderDetailPanel() {
+      const product = getSelectedProduct();
+      if (!product) return;
+      renderThumbnails(product);
+      $('#detailName').textContent = product.name;
+      $('#detailVariant').textContent = product.variant;
+      $('#detailBrand').textContent = product.brand;
+      $('#detailCategory').textContent = product.category;
+      $('#detailCondition').textContent = product.condition;
+      $('#detailStock').textContent = `${product.stock.toLocaleString('id-ID')} unit`;
+      $('#detailLocation').textContent = product.location;
+      const badge = $('#detailStatus');
+      badge.className = `status ${statusClass(product.status)} absolute right-2 top-2`;
+      badge.innerHTML = `<span class="status-dot"></span>${product.active ? 'Aktif' : 'Nonaktif'}`;
+      const toggleButton = $('#toggleActiveButton');
+      if (toggleButton) toggleButton.textContent = product.active ? 'Nonaktifkan' : 'Aktifkan';
+      renderDetailTab(state.activeDetailTab);
+    }
+
+    function renderDetailTab(tab = state.activeDetailTab) {
+      const product = getSelectedProduct();
+      if (!product) return;
+      state.activeDetailTab = tab;
+      $$('#detailTabs .detail-tab').forEach(button => {
+        const active = button.dataset.tab === tab;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-selected', String(active));
+        button.setAttribute('role', 'tab');
+      });
+      const content = $('#detailContent');
+      if (tab === 'detail') {
+        const swatches = getColorSwatches(product.color).map((color, index) => `<span class="inline-block h-3 w-3 rounded-full border border-slate-200 ${index === 0 ? 'mr-0.5' : ''}" style="background-color:${color}" title="Varian warna ${index + 1}" aria-label="Varian warna ${index + 1}"></span>`).join('');
+        content.innerHTML = `
+          <div class="spec-row"><span class="text-slate-500">SKU</span><b class="break-all">${escapeHtml(product.sku)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Kategori</span><b>${escapeHtml(product.category)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Merek</span><b>${escapeHtml(product.brand)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Model</span><b>${escapeHtml(product.model)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">RAM / Storage</span><b>${escapeHtml(product.storage)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Warna</span><span class="flex flex-wrap items-center gap-1.5">${swatches}<b>${escapeHtml(product.color)}</b></span></div>
+          <div class="spec-row"><span class="text-slate-500">Kondisi</span><b>${escapeHtml(product.condition)}</b></div>`;
+      } else if (tab === 'stock') {
+        content.innerHTML = `
+          <div class="spec-row"><span class="text-slate-500">Stok tersedia</span><b>${product.stock.toLocaleString('id-ID')} unit</b></div>
+          <div class="spec-row"><span class="text-slate-500">Status stok</span><b>${statusBadge(product.status)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Lokasi</span><b>${escapeHtml(product.location)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">IMEI / Nomor Seri</span><b class="break-all">${escapeHtml(product.imei || 'Belum dicatat')}</b></div>`;
+      } else if (tab === 'price') {
+        content.innerHTML = `
+          <div class="spec-row"><span class="text-slate-500">Harga Jual</span><b class="text-sm">${rupiah(product.price)}</b></div>
+          <div class="spec-row"><span class="text-slate-500">Kategori harga</span><b>${escapeHtml(product.category)}</b></div>
+          <p class="mt-3 rounded-xl bg-sky-50 p-3 text-xs text-sky-800">Harga yang ditampilkan adalah harga jual yang tersimpan untuk produk ini.</p>`;
+      } else if (tab === 'gallery') {
+        content.innerHTML = `<div class="grid grid-cols-3 gap-2 py-2">${makeGallery(product).map((url, index) => `<button type="button" class="rounded-lg border border-slate-200 p-1 hover:border-sky-400" data-gallery-image="${index}" aria-label="Pilih gambar ${index + 1}"><img src="${escapeHtml(url)}" alt="${escapeHtml(product.name)} gambar ${index + 1}" class="h-20 w-full rounded-lg object-contain" loading="lazy"></button>`).join('')}</div>`;
+      } else {
+        const history = [...(product.history || [])].reverse();
+        content.innerHTML = history.length ? `<div class="max-h-48 overflow-y-auto pr-1">${history.map(item => {
+          const date = new Date(item.date);
+          const dateText = Number.isNaN(date.getTime()) ? 'Waktu tidak tersedia' : date.toLocaleString('id-ID', {dateStyle:'medium', timeStyle:'short'});
+          return `<div class="border-b border-slate-100 py-2 last:border-b-0"><div class="flex items-start justify-between gap-2"><b class="text-[10px]">${escapeHtml(item.action)}</b><span class="text-right text-[9px] text-slate-400">${escapeHtml(dateText)}</span></div>${item.detail ? `<p class="mt-1 text-[10px] text-slate-500">${escapeHtml(item.detail)}</p>` : ''}</div>`;
+        }).join('')}</div>` : '<p class="py-4 text-center text-xs text-slate-400">Belum ada riwayat perubahan pada sesi data ini.</p>';
+      }
+      if (window.lucide) window.lucide.createIcons();
     }
 
     function selectProduct(id) {
-      const p = products.find(item => item.id === id);
-      if (!p) return;
-      selectedId = id;
-
-      document.getElementById('detailImage').src = p.image;
-      document.getElementById('detailName').textContent = p.name;
-      document.getElementById('detailVariant').textContent = p.variant;
-      document.getElementById('detailBrand').textContent = p.brand;
-      document.getElementById('detailCategory').textContent = p.category;
-      document.getElementById('detailCondition').textContent = p.condition;
-      document.getElementById('detailStock').textContent = p.stock + ' unit';
-      document.getElementById('detailLocation').textContent = p.location;
-
-      const detailStatus = document.getElementById('detailStatus');
-      detailStatus.className = `status ${statusClass(p.status)} absolute right-2 top-2`;
-      detailStatus.innerHTML = `<span class="status-dot"></span>${escapeHtml(p.active ? 'Aktif' : 'Nonaktif')}`;
-
-      renderDetailTab('detail');
+      const product = state.products.find(item => item.id === Number(id));
+      if (!product) return;
+      state.selectedId = product.id;
       renderTable();
+      renderDetailPanel();
     }
 
-    function changeDetailImage(src) {
-      document.getElementById('detailImage').src = src;
-    }
-
-    function renderDetailTab(tab) {
-      const p = products.find(item => item.id === selectedId);
-      if (!p) return;      const content = document.getElementById('detailContent');
-
-      if (tab === 'detail') {
-        content.innerHTML = `
-          <div class="spec-row"><span class="text-slate-500">SKU</span><b>${escapeHtml(p.sku)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Kategori</span><b>${escapeHtml(p.category)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Merek</span><b>${escapeHtml(p.brand)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Model</span><b>${escapeHtml(p.model)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">RAM / Storage</span><b>${escapeHtml(p.storage)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Warna</span>
-            <span class="flex items-center gap-1.5">
-              <span class="h-3 w-3 rounded-full bg-blue-600 inline-block border border-slate-200"></span>
-              <span class="h-3 w-3 rounded-full bg-sky-700 inline-block border border-slate-200"></span>
-              <span class="h-3 w-3 rounded-full bg-slate-900 inline-block border border-slate-200"></span>
-              <b>${escapeHtml(p.color)}</b>
-            </span>
-          </div>
-          <div class="spec-row"><span class="text-slate-500">Kondisi</span><b>${escapeHtml(p.condition)}</b></div>`;
-      } else if (tab === 'stock') {
-        content.innerHTML = `
-          <div class="spec-row"><span class="text-slate-500">Stok tersedia</span><b>${p.stock} unit</b></div>
-          <div class="spec-row"><span class="text-slate-500">Lokasi</span><b>${escapeHtml(p.location)}</b></div>
-          <div class="mt-3 rounded-xl bg-sky-50 p-3 text-xs text-sky-800">IMEI dan nomor seri tercatat di sistem utama.</div>`;
-      } else if (tab === 'price') {
-        content.innerHTML = `
-          <div class="spec-row"><span class="text-slate-500">Harga Jual</span><b class="text-sm">${rupiah(p.price)}</b></div>
-          <div class="spec-row"><span class="text-slate-500">Margin</span><b>Optimal</b></div>`;
-      } else if (tab === 'gallery') {
-        content.innerHTML = `
-          <div class="grid grid-cols-3 gap-2 py-2">
-            <img src="${p.image}" class="h-20 w-full rounded-lg border object-contain">
-            <img src="${p.image}" class="h-20 w-full rounded-lg border object-contain">
-          </div>`;
-      } else {
-        content.innerHTML = `<p class="py-4 text-center text-xs text-slate-400">Tidak ada riwayat perubahan mutakhir.</p>`;
-      }
-      lucide.createIcons();
+    function changeDetailImage(indexOrUrl) {
+      const product = getSelectedProduct();
+      if (!product) return;
+      const images = makeGallery(product);
+      const index = Number(indexOrUrl);
+      const url = Number.isInteger(index) && index >= 0 ? images[index] : String(indexOrUrl);
+      if (!url) return;
+      $('#detailImage').src = url;
+      $$('#detailThumbnails .thumb').forEach((thumb, i) => thumb.classList.toggle('active', i === index));
     }
 
     function toggleAdvancedFilter() {
-      document.getElementById('advancedFilter').classList.toggle('hidden');
+      $('#advancedFilter').classList.toggle('hidden');
     }
 
     function toggleColumnInfo() {
-      document.getElementById('columnInfo').classList.toggle('hidden');
+      $('#columnInfo').classList.toggle('hidden');
     }
 
-    function openProductForm(prod = null) {
-      const modal = document.getElementById('productModal');
-      document.getElementById('productForm').reset();
-      document.getElementById('productModalTitle').textContent = prod ? 'Edit Produk' : 'Tambah Produk';
-      document.getElementById('formId').value = prod ? prod.id : '';
-      if (prod) {
-        document.getElementById('formName').value = prod.name;
-        document.getElementById('formCategory').value = prod.category;
-        document.getElementById('formBrand').value = prod.brand;
-        document.getElementById('formSku').value = prod.sku;
-        document.getElementById('formPrice').value = prod.price;
-        document.getElementById('formStock').value = prod.stock;
-        document.getElementById('formStatus').value = prod.status;
+    function setFormError(element, message) {
+      element.setCustomValidity(message || '');
+    }
+
+    function openProductForm(productOrId = null) {
+      const product = typeof productOrId === 'number'
+        ? state.products.find(item => item.id === productOrId)
+        : productOrId;
+      const modal = $('#productModal');
+      const form = $('#productForm');
+      state.modalReturnFocus = document.activeElement;
+      form.reset();
+      form.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
+      $('#productModalTitle').textContent = product ? 'Edit Produk' : 'Tambah Produk';
+      $('#formId').value = product ? String(product.id) : '';
+      $('#formStatus').value = product ? product.status : 'Tersedia';
+      if (product) {
+        $('#formName').value = product.name;
+        $('#formCategory').value = product.category;
+        $('#formBrand').value = product.brand;
+        $('#formSku').value = product.sku;
+        $('#formPrice').value = String(product.price);
+        $('#formStock').value = String(product.stock);
       }
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => $('#formName').focus(), 0);
     }
 
     function closeProductForm() {
-      document.getElementById('productModal').classList.add('hidden');
-      document.getElementById('productModal').classList.remove('flex');
+      const modal = $('#productModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+      if (state.modalReturnFocus && typeof state.modalReturnFocus.focus === 'function') state.modalReturnFocus.focus();
     }
 
     function editSelectedProduct() {
-      const p = products.find(item => item.id === selectedId);
-      if (p) openProductForm(p);
+      const product = getSelectedProduct();
+      if (product) openProductForm(product);
     }
 
-    document.getElementById('productForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const idVal = document.getElementById('formId').value;
-      const existing = products.find(i => i.id === Number(idVal));
+    function refreshAfterMutation(message) {
+      const mutatedSelectionId = state.selectedId;
+      persistProducts();
+      applyFilters({ keepPage: true });
 
-      const name = document.getElementById('formName').value.trim();
-      const category = document.getElementById('formCategory').value;
-      const brand = document.getElementById('formBrand').value.trim();
-      const sku = document.getElementById('formSku').value.trim();
-      const price = Number(document.getElementById('formPrice').value);
-      const stock = Number(document.getElementById('formStock').value);
-      const status = document.getElementById('formStatus').value;
-
-      if (existing) {
-        existing.name = name;
-        existing.category = category;
-        existing.brand = brand;
-        existing.sku = sku;
-        existing.price = price;
-        existing.stock = stock;
-        existing.status = status;
-      } else {
-        const newItem = {
-          id: Math.max(0, ...products.map(i => i.id)) + 1,
-          name, variant: 'Standar', category, brand, sku, price, stock,
-          status, active: true, condition: 'Baru', model: name, storage: '-', color: 'Hitam', location: 'Rak Umum', image: phoneImage
-        };
-        products.unshift(newItem);
-        selectedId = newItem.id;
+      // Keep the mutated record in the detail panel even when the active filters
+      // hide it (for example, after changing an available item to Nonaktif).
+      if (state.products.some(product => product.id === mutatedSelectionId)) {
+        state.selectedId = mutatedSelectionId;
       }
+      const pageSize = Number($('#pageSize').value) || 10;
+      const selectedIndex = state.filteredProducts.findIndex(product => product.id === state.selectedId);
+      if (selectedIndex >= 0) state.currentPage = Math.floor(selectedIndex / pageSize) + 1;
+      renderTable();
+      renderDetailPanel();
+      renderKpis();
+      toast(message);
+    }
 
+    function onProductFormSubmit(event) {
+      event.preventDefault();
+      const nameInput = $('#formName');
+      const brandInput = $('#formBrand');
+      const skuInput = $('#formSku');
+      const priceInput = $('#formPrice');
+      const stockInput = $('#formStock');
+      const idValue = $('#formId').value;
+      const existing = idValue ? state.products.find(item => item.id === Number(idValue)) : null;
+      const name = nameInput.value.trim();
+      const brand = brandInput.value.trim();
+      const sku = skuInput.value.trim();
+      const price = Number(priceInput.value);
+      const stock = Number(stockInput.value);
+
+      [nameInput, brandInput, skuInput, priceInput, stockInput].forEach(input => input.setCustomValidity(''));
+      if (name.length < 2) setFormError(nameInput, 'Nama produk minimal 2 karakter.');
+      const duplicateSku = state.products.some(product => product.sku.toLocaleLowerCase('id-ID') === sku.toLocaleLowerCase('id-ID') && product.id !== existing?.id);
+      if (!sku) setFormError(skuInput, 'SKU wajib diisi.');
+      else if (duplicateSku) setFormError(skuInput, 'SKU sudah digunakan produk lain. Gunakan SKU yang unik.');
+      if (!brand) setFormError(brandInput, 'Merek wajib diisi.');
+      if (!isIntegerAtLeast(price, 1)) setFormError(priceInput, 'Harga jual harus bilangan bulat lebih besar dari 0.');
+      if (!isIntegerAtLeast(stock, 0)) setFormError(stockInput, 'Stok harus bilangan bulat nol atau lebih.');
+      if (!$('#productForm').reportValidity()) return;
+
+      const category = $('#formCategory').value;
+      const requestedStatus = $('#formStatus').value;
+      let product;
+      if (existing) {
+        const changes = [];
+        if (existing.name !== name) changes.push('nama');
+        if (existing.sku !== sku) changes.push('SKU');
+        if (existing.price !== price) changes.push('harga');
+        if (existing.stock !== stock) changes.push('stok');
+        Object.assign(existing, {
+          name, brand, sku, price, stock, category,
+          model: existing.model === existing.name ? name : existing.model,
+          image: existing.image || imageForCategory(category),
+          gallery: existing.gallery || [],
+          active: requestedStatus !== 'Nonaktif',
+          status: requestedStatus
+        });
+        if (!existing.active) existing.status = 'Nonaktif';
+        else if (stock === 0) existing.status = 'Habis';
+        else if (requestedStatus === 'Nonaktif') existing.status = 'Nonaktif';
+        addHistory(existing, 'Produk diperbarui', changes.length ? `Bidang berubah: ${changes.join(', ')}.` : 'Data produk diperbarui.');
+        product = existing;
+      } else {
+        const nextId = state.products.reduce((max, item) => Math.max(max, item.id), 0) + 1;
+        product = normalizeProduct({
+          id: nextId, name, variant: 'Standar', category, brand, sku, price, stock,
+          status: stock === 0 ? 'Habis' : requestedStatus,
+          active: requestedStatus !== 'Nonaktif', condition: 'Baru', model: name,
+          storage: '—', color: 'Belum ditentukan', location: 'Rak Umum',
+          image: imageForCategory(category), gallery: [imageForCategory(category)], history: []
+        });
+        if (!product.active) product.status = 'Nonaktif';
+        addHistory(product, 'Produk ditambahkan', 'Produk baru dibuat melalui formulir.');
+        state.products.unshift(product);
+      }
+      state.selectedId = product.id;
+      state.activeDetailTab = 'detail';
       closeProductForm();
-      applyFilters();
-      selectProduct(selectedId);
-      toast('Data produk berhasil disimpan.');
-    });
+      refreshAfterMutation(existing ? 'Perubahan produk berhasil disimpan.' : 'Produk baru berhasil ditambahkan.');
+    }
+
+    function editStatusFromStock(product) {
+      if (!product.active) return 'Nonaktif';
+      if (product.stock <= 0) return 'Habis';
+      if (product.stock <= 3) return 'Menipis';
+      return 'Tersedia';
+    }
 
     function adjustStock() {
-      const p = products.find(i => i.id === selectedId);
-      if (!p) return;
-      const val = prompt(`Atur stok untuk ${p.name}:`, p.stock);
-      if (val === null) return;
-      const num = Number(val);
-      if (!isNaN(num) && num >= 0) {
-        p.stock = num;
-        p.status = num === 0 ? 'Habis' : num <= 3 ? 'Menipis' : 'Tersedia';
-        selectProduct(p.id);
-        applyFilters();
-        toast('Stok berhasil diperbarui.');
+      const product = getSelectedProduct();
+      if (!product) return;
+      const value = prompt(`Masukkan jumlah stok baru untuk ${product.name} (bilangan bulat ≥ 0):`, String(product.stock));
+      if (value === null) return;
+      const trimmed = value.trim();
+      if (!/^\d+$/.test(trimmed) || !isIntegerAtLeast(trimmed, 0)) {
+        toast('Stok harus berupa bilangan bulat nol atau lebih.');
+        return;
       }
+      const nextStock = Number(trimmed);
+      const previousStock = product.stock;
+      product.stock = nextStock;
+      product.status = editStatusFromStock(product);
+      addHistory(product, 'Stok diperbarui', `Stok berubah dari ${previousStock} menjadi ${nextStock} unit.`);
+      refreshAfterMutation('Stok berhasil diperbarui.');
+    }
+
+    function makeUniqueSku(baseSku) {
+      const exists = sku => state.products.some(product => product.sku.toLocaleLowerCase('id-ID') === sku.toLocaleLowerCase('id-ID'));
+      let candidate = `${baseSku}-C`;
+      let counter = 2;
+      while (exists(candidate)) {
+        candidate = `${baseSku}-C${counter}`;
+        counter += 1;
+      }
+      return candidate;
     }
 
     function duplicateSelectedProduct() {
-      const p = products.find(i => i.id === selectedId);
-      if (!p) return;
-      const copy = { ...p, id: Math.max(0, ...products.map(i => i.id)) + 1, name: p.name + ' (Copy)', sku: p.sku + '-C' };
-      products.unshift(copy);
-      selectedId = copy.id;
-      applyFilters();
-      selectProduct(selectedId);
-      toast('Produk berhasil diduplikasi.');
+      const product = getSelectedProduct();
+      if (!product) return;
+      const copy = normalizeProduct({
+        ...product,
+        id: state.products.reduce((max, item) => Math.max(max, item.id), 0) + 1,
+        name: `${product.name} (Copy)`,
+        sku: makeUniqueSku(product.sku),
+        history: []
+      });
+      addHistory(copy, 'Produk diduplikasi', `Salinan dibuat dari SKU ${product.sku}.`);
+      state.products.unshift(copy);
+      state.selectedId = copy.id;
+      state.activeDetailTab = 'detail';
+      $('#detailActionMenu').classList.add('hidden');
+      refreshAfterMutation('Produk berhasil diduplikasi dengan SKU baru.');
     }
 
     function deactivateSelectedProduct() {
-      const p = products.find(i => i.id === selectedId);
-      if (!p) return;
-      p.status = 'Nonaktif';
-      p.active = false;
-      selectProduct(p.id);
-      applyFilters();
-      toast('Produk dinonaktifkan.');
+      const product = getSelectedProduct();
+      if (!product) return;
+      const wasActive = product.active;
+      if (wasActive && !confirm(`Nonaktifkan produk “${product.name}”?`)) return;
+      product.active = !wasActive;
+      product.status = product.active ? editStatusFromStock(product) : 'Nonaktif';
+      addHistory(product, product.active ? 'Produk diaktifkan' : 'Produk dinonaktifkan', `Status produk: ${product.status}.`);
+      $('#detailActionMenu').classList.add('hidden');
+      refreshAfterMutation(product.active ? 'Produk berhasil diaktifkan kembali.' : 'Produk berhasil dinonaktifkan.');
     }
 
-    function importProducts() { toast('Fitur import CSV siap digunakan.'); }
-    function exportProducts() { toast('Ekspor daftar produk berhasil.'); }
+    function parseCsv(text) {
+      const rows = [];
+      let row = [], field = '', inQuotes = false;
+      const input = String(text || '').replace(/^\uFEFF/, '');
+      for (let i = 0; i < input.length; i += 1) {
+        const char = input[i];
+        if (char === '"' && inQuotes && input[i + 1] === '"') { field += '"'; i += 1; }
+        else if (char === '"') inQuotes = !inQuotes;
+        else if (char === ',' && !inQuotes) { row.push(field.trim()); field = ''; }
+        else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && input[i + 1] === '\n') i += 1;
+          row.push(field.trim()); field = '';
+          if (row.some(value => value !== '')) rows.push(row);
+          row = [];
+        } else field += char;
+      }
+      row.push(field.trim());
+      if (row.some(value => value !== '')) rows.push(row);
+      return rows;
+    }
 
-    // Event Listeners
-    document.querySelectorAll('#categoryTabs .pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeCategory = btn.dataset.category;
-        document.querySelectorAll('#categoryTabs .pill').forEach(b => b.classList.toggle('active', b === btn));
-        document.getElementById('categoryFilter').value = activeCategory === 'Semua' ? '' : activeCategory;
+    function importProducts() {
+      let input = $('#csvImportInput');
+      if (!input) {
+        input = document.createElement('input');
+        input.id = 'csvImportInput';
+        input.type = 'file';
+        input.accept = '.csv,text/csv';
+        input.hidden = true;
+        document.body.appendChild(input);
+        input.addEventListener('change', async () => {
+          const file = input.files?.[0];
+          if (!file) return;
+          try {
+            const rows = parseCsv(await file.text());
+            if (rows.length < 2) { toast('CSV kosong atau tidak memiliki baris data.'); return; }
+            const headers = rows[0].map(header => header.trim().toLocaleLowerCase('id-ID'));
+            const indexOf = names => headers.findIndex(header => names.includes(header));
+            const columns = {
+              name: indexOf(['name', 'nama', 'nama produk', 'product']),
+              sku: indexOf(['sku', 'kode produk', 'kode']),
+              brand: indexOf(['brand', 'merek', 'merk']),
+              category: indexOf(['category', 'kategori']),
+              price: indexOf(['price', 'harga', 'harga jual']),
+              stock: indexOf(['stock', 'stok']),
+              status: indexOf(['status']),
+              condition: indexOf(['condition', 'kondisi'])
+            };
+            if (columns.name < 0 || columns.sku < 0 || columns.price < 0 || columns.stock < 0) {
+              toast('Header CSV wajib memiliki Nama, SKU, Harga, dan Stok.'); return;
+            }
+            let imported = 0, skipped = 0;
+            rows.slice(1).forEach(row => {
+              const get = key => columns[key] < 0 ? '' : (row[columns[key]] || '').trim();
+              const name = get('name'), sku = get('sku'), price = Number(get('price')), stock = Number(get('stock'));
+              const duplicate = state.products.some(product => product.sku.toLocaleLowerCase('id-ID') === sku.toLocaleLowerCase('id-ID'));
+              if (!name || !sku || duplicate || !isIntegerAtLeast(price, 1) || !isIntegerAtLeast(stock, 0)) { skipped += 1; return; }
+              const category = get('category') || 'Lainnya';
+              const product = normalizeProduct({
+                id: state.products.reduce((max, item) => Math.max(max, item.id), 0) + 1,
+                name, sku, brand: get('brand') || 'Generic', category, price, stock,
+                status: get('status') || (stock === 0 ? 'Habis' : stock <= 3 ? 'Menipis' : 'Tersedia'),
+                active: get('status') !== 'Nonaktif', condition: get('condition') || 'Baru',
+                model: name, storage: '—', color: 'Belum ditentukan', location: 'Rak Umum',
+                image: imageForCategory(category), gallery: [imageForCategory(category)], history: []
+              });
+              addHistory(product, 'Produk diimpor', `Diimpor dari file ${file.name}.`);
+              state.products.push(product);
+              imported += 1;
+            });
+            state.selectedId = imported ? state.products[state.products.length - imported].id : state.selectedId;
+            refreshAfterMutation(`Import selesai: ${imported} produk masuk, ${skipped} baris dilewati.`);
+          } catch (error) {
+            console.error('Import CSV gagal.', error);
+            toast('File CSV tidak dapat dibaca. Periksa format file.');
+          } finally {
+            input.value = '';
+          }
+        });
+      }
+      input.click();
+    }
+
+    function exportProducts() {
+      const headers = ['Nama Produk', 'SKU', 'Merek', 'Kategori', 'Harga Jual', 'Stok', 'Status', 'Kondisi', 'Lokasi'];
+      const rows = state.filteredProducts.map(product => [product.name, product.sku, product.brand, product.category, product.price, product.stock, product.status, product.condition, product.location]);
+      const encode = value => `"${String(value ?? '').replace(/"/g, '""')}"`;
+      const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(encode).join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `laraya-produk-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      toast(`${rows.length} produk diekspor ke CSV.`);
+    }
+
+    function bindEvents() {
+      $('#productForm').addEventListener('submit', onProductFormSubmit);
+      $('#formSku').addEventListener('input', () => setFormError($('#formSku'), ''));
+      $('#formPrice').addEventListener('input', () => setFormError($('#formPrice'), ''));
+      $('#formStock').addEventListener('input', () => setFormError($('#formStock'), ''));
+
+      $('#categoryTabs').addEventListener('click', event => {
+        const button = event.target.closest('.pill[data-category]');
+        if (!button) return;
+        state.activeCategory = button.dataset.category;
+        $('#categoryFilter').value = state.activeCategory === 'Semua' ? '' : state.activeCategory;
+        syncCategoryTabs();
         applyFilters();
       });
-    });
 
-    document.querySelectorAll('#detailTabs .detail-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#detailTabs .detail-tab').forEach(b => b.classList.toggle('active', b === btn));
-        renderDetailTab(btn.dataset.tab);
+      $('#categoryFilter').addEventListener('change', () => {
+        state.activeCategory = $('#categoryFilter').value || 'Semua';
+        syncCategoryTabs();
+        applyFilters();
       });
-    });
 
-    ['productSearch', 'brandFilter', 'categoryFilter', 'statusFilter'].forEach(id => {
-      document.getElementById(id).addEventListener(id === 'productSearch' ? 'input' : 'change', applyFilters);
-    });
+      $('#detailTabs').addEventListener('click', event => {
+        const button = event.target.closest('.detail-tab[data-tab]');
+        if (button) renderDetailTab(button.dataset.tab);
+      });
 
-    document.getElementById('pageSize').addEventListener('change', () => { currentPage = 1; renderTable(); });
+      $('#detailThumbnails').addEventListener('click', event => {
+        const button = event.target.closest('[data-gallery-image]');
+        if (button) changeDetailImage(Number(button.dataset.galleryImage));
+      });
 
-    // Init
-    lucide.createIcons();
+      $('#detailContent').addEventListener('click', event => {
+        const button = event.target.closest('[data-gallery-image]');
+        if (button) changeDetailImage(Number(button.dataset.galleryImage));
+      });
+
+      $('#productTable').addEventListener('click', event => {
+        const row = event.target.closest('tr[data-product-id]');
+        if (!row) return;
+        const id = Number(row.dataset.productId);
+        const editButton = event.target.closest('[data-action="edit"]');
+        if (editButton) { selectProduct(id); editSelectedProduct(); return; }
+        if (event.target.closest('[data-stop-row]')) return;
+        selectProduct(id);
+      });
+
+      $('#productTable').addEventListener('keydown', event => {
+        if ((event.key !== 'Enter' && event.key !== ' ') || event.target.closest('button, input')) return;
+        const row = event.target.closest('tr[data-product-id]');
+        if (row) { event.preventDefault(); selectProduct(Number(row.dataset.productId)); }
+      });
+
+      $('#productTable').addEventListener('change', event => {
+        const checkbox = event.target.closest('.row-check[data-id]');
+        if (!checkbox) return;
+        const id = Number(checkbox.dataset.id);
+        checkbox.checked ? state.selectedIds.add(id) : state.selectedIds.delete(id);
+        renderTable();
+      });
+
+      $('#selectAll').addEventListener('change', event => {
+        const pageSize = Number($('#pageSize').value) || 10;
+        const start = (state.currentPage - 1) * pageSize;
+        const visible = state.filteredProducts.slice(start, start + pageSize);
+        visible.forEach(product => event.target.checked ? state.selectedIds.add(product.id) : state.selectedIds.delete(product.id));
+        renderTable();
+      });
+
+      $('#pagination').addEventListener('click', event => {
+        const button = event.target.closest('[data-page]');
+        if (!button || button.disabled) return;
+        const page = Number(button.dataset.page);
+        if (!Number.isInteger(page) || page < 1) return;
+        state.currentPage = page;
+        renderTable();
+      });
+
+      ['productSearch', 'globalSearch'].forEach(id => $( `#${id}`).addEventListener('input', () => applyFilters()));
+      ['brandFilter', 'statusFilter', 'minPrice', 'maxPrice'].forEach(id => $( `#${id}`).addEventListener('input', () => applyFilters()));
+      ['brandFilter', 'statusFilter'].forEach(id => $( `#${id}`).addEventListener('change', () => applyFilters()));
+      $('#pageSize').addEventListener('change', () => { state.currentPage = 1; renderTable(); });
+
+      document.addEventListener('keydown', event => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLocaleLowerCase('id-ID') === 'k') {
+          event.preventDefault();
+          $('#globalSearch').focus();
+          $('#globalSearch').select();
+        }
+        if (event.key === 'Escape') {
+          if (!$('#productModal').classList.contains('hidden')) closeProductForm();
+          $('#detailActionMenu').classList.add('hidden');
+          $('#branchMenu').classList.add('hidden');
+          if ($('#sidebar').classList.contains('open')) toggleSidebar(false);
+        }
+      });
+
+      document.addEventListener('click', event => {
+        const actionMenu = $('#detailActionMenu');
+        if (!event.target.closest('#detailActionMenu') && !event.target.closest('[aria-label="Aksi lainnya"]')) actionMenu.classList.add('hidden');
+        if (!event.target.closest('#branchMenu') && !event.target.closest('#branchButton')) $('#branchMenu').classList.add('hidden');
+      });
+    }
+
+    // Existing inline handlers in the locked mockup use these function names.
+    window.toggleSidebar = toggleSidebar;
+    window.setBranch = setBranch;
+    window.toast = toast;
+    window.toggleAdvancedFilter = toggleAdvancedFilter;
+    window.toggleColumnInfo = toggleColumnInfo;
+    window.openProductForm = openProductForm;
+    window.closeProductForm = closeProductForm;
+    window.editSelectedProduct = editSelectedProduct;
+    window.adjustStock = adjustStock;
+    window.duplicateSelectedProduct = duplicateSelectedProduct;
+    window.deactivateSelectedProduct = deactivateSelectedProduct;
+    window.importProducts = importProducts;
+    window.exportProducts = exportProducts;
+
+    bindEvents();
+    if (window.lucide) window.lucide.createIcons();
     applyFilters();
-    selectProduct(selectedId);
-  </script>
+    if (!state.products.some(product => product.id === state.selectedId)) state.selectedId = state.products[0]?.id ?? null;
+    renderDetailPanel();
+  })();
+</script>
 </body>
 </html>
