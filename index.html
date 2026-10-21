@@ -601,6 +601,49 @@ td{padding:9px 8px}
   .dashboard-row-secondary>.card:nth-child(2) table {min-width:540px!important;table-layout:auto!important}
 }
 
+
+/* LOCKED MOCKUP ALIGNMENT — desktop shell, row rhythm, and activity density */
+@media (min-width:1181px) {
+  .app {grid-template-columns:225px minmax(0,1fr)!important}
+  .topbar {height:62px!important;padding:0 24px!important;gap:14px!important}
+  .search {max-width:640px!important;min-height:42px!important}
+  .content {padding-left:26px!important;padding-right:24px!important}
+}
+@media (min-width:851px) {
+  .layout {row-gap:10px!important;gap:10px!important}
+  .dashboard-row {margin:0!important;gap:10px!important}
+}
+@media (min-width:1181px) {
+  .dashboard-row-secondary>.card:nth-child(2) table {font-size:10px!important}
+  .dashboard-row-secondary>.card:nth-child(2) th {
+    padding:6px 3px!important;
+    font-size:9.5px!important;
+    line-height:1.15!important;
+  }
+  .dashboard-row-secondary>.card:nth-child(2) td {
+    padding:4px 3px!important;
+    line-height:1.15!important;
+  }
+  .dashboard-row-tertiary>.card:nth-child(3) .activity {
+    grid-template-columns:24px minmax(0,1fr) 58px!important;
+    gap:6px!important;
+    padding:5px 0!important;
+  }
+  .dashboard-row-tertiary>.card:nth-child(3) .activity-icon {
+    width:22px!important;height:22px!important;font-size:12px!important;
+  }
+  .dashboard-row-tertiary>.card:nth-child(3) .activity b {
+    font-size:10px!important;line-height:1.2!important;
+  }
+  .dashboard-row-tertiary>.card:nth-child(3) .activity p {
+    font-size:9px!important;line-height:1.2!important;
+    display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .dashboard-row-tertiary>.card:nth-child(3) .time {
+    font-size:8.5px!important;line-height:1.2!important;
+  }
+}
+
 </style>
 </head>
 <body>
