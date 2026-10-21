@@ -233,9 +233,6 @@ td{padding:9px 8px}
 
 /* Deep-audit remediation: use the approved transparent LARAYA master logo
    and make operational filter feedback visible without changing dashboard composition. */
-.brand{display:flex;align-items:center;min-width:0;height:60px;overflow:visible}
-.brand-lockup{display:flex;align-items:center;min-width:0;width:100%;height:auto;overflow:visible}
-.brand-lockup img{display:block;width:100%;max-width:190px;max-height:44px;height:auto;object-fit:contain;object-position:left center}
 .filter-feedback{display:block!important;margin:0 0 10px;padding:8px 11px;border:1px solid #d9e8f2;border-radius:9px;background:#eef7fc;color:#234b63;font-size:11px;line-height:1.45}
 .filter-feedback:empty{display:none!important}
 @media (min-width:561px) and (max-width:850px){
@@ -257,12 +254,42 @@ td{padding:9px 8px}
   .periods button{padding-left:6px;padding-right:6px}
 }
 
+
+/* Approved mockup alignment: each dashboard row has its own column proportions. */
+.layout{display:flex!important;flex-direction:column!important;gap:10px!important;min-width:0}
+.dashboard-row{display:grid;gap:10px;align-items:stretch;min-width:0}
+.dashboard-row-primary{grid-template-columns:minmax(0,1.8fr) minmax(0,1.08fr) minmax(245px,1fr)}
+.dashboard-row-secondary,.dashboard-row-tertiary{grid-template-columns:minmax(0,1.28fr) minmax(0,1.6fr) minmax(245px,1fr)}
+.dashboard-row>.card{width:auto!important;min-width:0;margin:0!important;position:static!important;z-index:auto!important}
+.dashboard-row>.card{height:100%}
+.dashboard-row .table-wrap{max-width:100%;overflow-x:auto}
+.dashboard-row .table-wrap table{width:100%;min-width:520px}
+.dashboard-row .table-wrap::-webkit-scrollbar{height:8px}
+.dashboard-row .table-wrap::-webkit-scrollbar-thumb{background:#9aa5b1;border-radius:8px}
+.dashboard-row .table-wrap::-webkit-scrollbar-track{background:#eef2f5;border-radius:8px}
+@media(max-width:1180px){
+  .dashboard-row-primary{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+  .dashboard-row-primary>.card:nth-child(3){grid-column:1/-1}
+  .dashboard-row-secondary,.dashboard-row-tertiary{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .dashboard-row-secondary>.card:nth-child(3),.dashboard-row-tertiary>.card:nth-child(3){grid-column:1/-1}
+}
+@media(max-width:850px){
+  .dashboard-row-primary,.dashboard-row-secondary,.dashboard-row-tertiary{grid-template-columns:minmax(0,1fr)}
+  .dashboard-row-primary>.card:nth-child(3),.dashboard-row-secondary>.card:nth-child(3),.dashboard-row-tertiary>.card:nth-child(3){grid-column:auto}
+  .dashboard-row .table-wrap table{min-width:540px}
+}
+@media(max-width:560px){
+  .dashboard-row{gap:10px}
+  .dashboard-row .table-wrap table{min-width:520px}
+  .dashboard-row .card{border-radius:13px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-<div class="brand"><a class="brand-lockup" href="index.html" aria-label="LARAYA — Dashboard"><img src="https://raw.githubusercontent.com/nusakaracreative/laraya/main/Laraya%20master%20desain%20with%20text%20transparan%20SVG.svg" alt="LARAYA — Digital Systems &amp; Technology"></a></div>
+<div class="brand"><div class="brand-lockup" aria-label="NUSAKARA Electronics System"><svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true"><path d="M3 5h7l16 20V5h7v26h-7L10 11v20H3z" fill="#20b8f4"/><path d="M3 5h7l6 8v10z" fill="#f4fbff"/><path d="M26 25l7 6h-7l-5-6z" fill="#1685d4"/></svg><span class="brand-type"><b>NUSAKARA</b><small>ELECTRONICS SYSTEM</small></span></div></div>
 <nav class="nav" id="nav">
 <button class="active" data-page="Dashboard"><span class="ico">⌂</span><span class="nav-label">Dashboard</span></button>
 <button data-page="Produk"><span class="ico">▣</span><span class="nav-label">Produk</span></button>
@@ -289,21 +316,21 @@ td{padding:9px 8px}
 <div class="card kpi"><div class="kpi-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7l9-5Z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg></div><div><div class="kpi-label">Stok Tersedia</div><div class="kpi-value">1.248 unit</div><div class="muted"><span class="change down">↓ 3%</span>　dari minggu lalu</div></div><span style="margin-left:auto;color:#0784df;font-size:20px">›</span></div>
 </section>
 <section class="layout">
-<div class="stack left-stack">
-<div class="card panel"><div class="panel-head"><h2>Grafik Penjualan</h2><div class="legend"><span><i class="swatch" style="background:#2186cc"></i>Penjualan</span><span><i class="swatch" style="background:#acd9fa"></i>Laba Kotor</span></div></div><div class="chart"><div class="ylabels"><span>20 jt</span><span>15 jt</span><span>10 jt</span><span>5 jt</span><span>0</span></div><div class="plot" id="salesChart"></div><div class="xlabels"><span>14 Okt</span><span>15 Okt</span><span>16 Okt</span><span>17 Okt</span><span>18 Okt</span><span>19 Okt</span><span>20 Okt</span></div></div></div>
-<div class="card panel"><div class="panel-head"><h2>Stok Menipis</h2><button class="link" data-page="Stok & Inventaris">Lihat Semua</button></div><div id="stockList"></div></div>
-<div class="card panel"><div class="panel-head"><h2>Penjualan per Cabang</h2><button class="link" data-page="Laporan">Lihat Semua</button></div><div class="branch-bar"><span>Majalaya</span><div class="track"><div class="fill" style="width:100%"></div></div><b>Rp 5.820.000</b></div><div class="branch-bar"><span>Cimahi</span><div class="track"><div class="fill" style="width:85%"></div></div><b>Rp 4.950.000</b></div><div class="branch-bar"><span>Cicadas</span><div class="track"><div class="fill" style="width:54%"></div></div><b>Rp 3.125.000</b></div><div class="branch-bar"><span>Rancamanyar</span><div class="track"><div class="fill" style="width:43%"></div></div><b>Rp 2.480.000</b></div></div>
-</div>
-<div class="stack center-stack">
-<div class="card panel"><div class="panel-head"><h2>Penjualan per Kategori</h2></div><div class="donut-wrap"><div class="donut"><div class="donut-center">Rp 5,82 jt<small>Total</small></div></div><div class="legend-list"><div class="legend-row"><i class="swatch" style="background:#1682c8"></i><span class="legend-label">HP</span><b>45%</b></div><div class="legend-row"><i class="swatch" style="background:#35a5ee"></i><span class="legend-label">Aksesoris</span><b>20%</b></div><div class="legend-row"><i class="swatch" style="background:#9ed4ff"></i><span class="legend-label">TV &amp; Audio</span><b>12%</b></div><div class="legend-row"><i class="swatch" style="background:#0dc6b7"></i><span class="legend-label">Kulkas &amp; Mesin Cuci</span><b>10%</b></div><div class="legend-row"><i class="swatch" style="background:#7ce0bd"></i><span class="legend-label">Laptop &amp; Tablet</span><b>8%</b></div><div class="legend-row"><i class="swatch" style="background:#9aa8b8"></i><span class="legend-label">Lainnya</span><b>5%</b></div></div></div></div>
-<div class="card panel"><div class="panel-head"><h2>Transaksi Terbaru</h2><button class="link" data-page="Transaksi">Lihat Semua</button></div><div class="table-wrap"><table><thead><tr><th>No. Transaksi</th><th>Pelanggan</th><th>Total</th><th>Pembayaran</th><th>Status</th></tr></thead><tbody id="transactions"></tbody></table></div></div>
-<div class="card panel"><div class="panel-head"><h2>Produk Terlaris</h2><button class="link" data-page="Produk">Lihat Semua</button></div><div class="best-grid" id="bestList"></div></div>
-</div>
-<div class="stack right-stack">
-<div class="card panel"><div class="panel-head"><h2>Notifikasi</h2><button class="link" id="allNotices">Lihat Semua</button></div><div class="notice"><div class="notice-icon red">!</div><div><b>Stok hampir habis</b><p>Charger Type C 20W (3 unit)</p></div><span class="time">2 menit yang lalu</span></div><div class="notice"><div class="notice-icon">▣</div><div><b>Pesanan marketplace baru</b><p>#SPX20261020-001</p></div><span class="time">12 menit lalu</span></div><div class="notice"><div class="notice-icon">🔧</div><div><b>Tiket servis baru</b><p>TSV-20261020-003</p></div><span class="time">25 menit lalu</span></div><div class="notice"><div class="notice-icon orange">▤</div><div><b>Pembayaran tertunda</b><p>TRX-20261020-0012</p></div><span class="time">1 jam yang lalu</span></div></div>
-<div class="card panel"><div class="panel-head"><h2>Tiket Servis</h2><button class="link" data-page="Servis & Garansi">Lihat Semua</button></div><div class="service-row"><div class="phone">▰</div><div><b>TSV-20261020-003</b><p>iPhone 11 128GB</p></div><div class="service-meta"><span class="pill blue">Proses</span><p>20 Okt 2026</p></div></div><div class="service-row"><div class="phone" style="background:linear-gradient(145deg,#75b9e5,#133b5a)">▥</div><div><b>TSV-20261020-002</b><p>Samsung A54 5G</p></div><div class="service-meta"><span class="pill blue">Diagnosa</span><p>19 Okt 2026</p></div></div><div class="service-row"><div class="phone" style="background:linear-gradient(145deg,#a5d4f4,#0e3d6d)">▥</div><div><b>TSV-20261020-001</b><p>OPPO Reno 7</p></div><div class="service-meta"><span class="pill ok">Selesai</span><p>18 Okt 2026</p></div></div></div>
-<div class="card panel"><div class="panel-head"><h2>Aktivitas Terbaru</h2><button class="link" id="allActivity">Lihat Semua</button></div><div class="activity"><div class="activity-icon" style="background:#dff8ec;color:#078953">✓</div><div><b>Transaksi selesai</b><p>TRX-20261020-0018 - Rp 2.850.000</p></div><span class="time">2 menit lalu</span></div><div class="activity"><div class="activity-icon">▣</div><div><b>Stok masuk</b><p>Samsung A54 5G (10 unit)</p></div><span class="time">15 menit lalu</span></div><div class="activity"><div class="activity-icon">▣</div><div><b>Pesanan marketplace</b><p>#SPX20261020-001 - Tokopedia</p></div><span class="time">32 menit lalu</span></div><div class="activity"><div class="activity-icon">🔧</div><div><b>Tiket servis baru</b><p>TSV-20261020-003 - iPhone 11</p></div><span class="time">1 jam lalu</span></div><div class="activity"><div class="activity-icon">♙</div><div><b>Pengguna login</b><p>Ahmad (Owner)</p></div><span class="time">1 jam lalu</span></div></div>
-</div>
+  <div class="dashboard-row dashboard-row-primary">
+    <div class="card panel"><div class="panel-head"><h2>Grafik Penjualan</h2><div class="legend"><span><i class="swatch" style="background:#2186cc"></i>Penjualan</span><span><i class="swatch" style="background:#acd9fa"></i>Laba Kotor</span></div></div><div class="chart"><div class="ylabels"><span>20 jt</span><span>15 jt</span><span>10 jt</span><span>5 jt</span><span>0</span></div><div class="plot" id="salesChart"></div><div class="xlabels"><span>14 Okt</span><span>15 Okt</span><span>16 Okt</span><span>17 Okt</span><span>18 Okt</span><span>19 Okt</span><span>20 Okt</span></div></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Penjualan per Kategori</h2></div><div class="donut-wrap"><div class="donut"><div class="donut-center">Rp 5,82 jt<small>Total</small></div></div><div class="legend-list"><div class="legend-row"><i class="swatch" style="background:#1682c8"></i><span class="legend-label">HP</span><b>45%</b></div><div class="legend-row"><i class="swatch" style="background:#35a5ee"></i><span class="legend-label">Aksesoris</span><b>20%</b></div><div class="legend-row"><i class="swatch" style="background:#9ed4ff"></i><span class="legend-label">TV &amp; Audio</span><b>12%</b></div><div class="legend-row"><i class="swatch" style="background:#0dc6b7"></i><span class="legend-label">Kulkas &amp; Mesin Cuci</span><b>10%</b></div><div class="legend-row"><i class="swatch" style="background:#7ce0bd"></i><span class="legend-label">Laptop &amp; Tablet</span><b>8%</b></div><div class="legend-row"><i class="swatch" style="background:#9aa8b8"></i><span class="legend-label">Lainnya</span><b>5%</b></div></div></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Notifikasi</h2><button class="link" id="allNotices">Lihat Semua</button></div><div class="notice"><div class="notice-icon red">!</div><div><b>Stok hampir habis</b><p>Charger Type C 20W (3 unit)</p></div><span class="time">2 menit yang lalu</span></div><div class="notice"><div class="notice-icon">▣</div><div><b>Pesanan marketplace baru</b><p>#SPX20261020-001</p></div><span class="time">12 menit lalu</span></div><div class="notice"><div class="notice-icon">🔧</div><div><b>Tiket servis baru</b><p>TSV-20261020-003</p></div><span class="time">25 menit lalu</span></div><div class="notice"><div class="notice-icon orange">▤</div><div><b>Pembayaran tertunda</b><p>TRX-20261020-0012</p></div><span class="time">1 jam yang lalu</span></div></div>
+  </div>
+  <div class="dashboard-row dashboard-row-secondary">
+    <div class="card panel"><div class="panel-head"><h2>Stok Menipis</h2><button class="link" data-page="Stok & Inventaris">Lihat Semua</button></div><div id="stockList"></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Transaksi Terbaru</h2><button class="link" data-page="Transaksi">Lihat Semua</button></div><div class="table-wrap"><table><thead><tr><th>No. Transaksi</th><th>Pelanggan</th><th>Total</th><th>Pembayaran</th><th>Status</th></tr></thead><tbody id="transactions"></tbody></table></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Tiket Servis</h2><button class="link" data-page="Servis & Garansi">Lihat Semua</button></div><div class="service-row"><div class="phone">▰</div><div><b>TSV-20261020-003</b><p>iPhone 11 128GB</p></div><div class="service-meta"><span class="pill blue">Proses</span><p>20 Okt 2026</p></div></div><div class="service-row"><div class="phone" style="background:linear-gradient(145deg,#75b9e5,#133b5a)">▥</div><div><b>TSV-20261020-002</b><p>Samsung A54 5G</p></div><div class="service-meta"><span class="pill blue">Diagnosa</span><p>19 Okt 2026</p></div></div><div class="service-row"><div class="phone" style="background:linear-gradient(145deg,#a5d4f4,#0e3d6d)">▥</div><div><b>TSV-20261020-001</b><p>OPPO Reno 7</p></div><div class="service-meta"><span class="pill ok">Selesai</span><p>18 Okt 2026</p></div></div></div>
+  </div>
+  <div class="dashboard-row dashboard-row-tertiary">
+    <div class="card panel"><div class="panel-head"><h2>Penjualan per Cabang</h2><button class="link" data-page="Laporan">Lihat Semua</button></div><div class="branch-bar"><span>Majalaya</span><div class="track"><div class="fill" style="width:100%"></div></div><b>Rp 5.820.000</b></div><div class="branch-bar"><span>Cimahi</span><div class="track"><div class="fill" style="width:85%"></div></div><b>Rp 4.950.000</b></div><div class="branch-bar"><span>Cicadas</span><div class="track"><div class="fill" style="width:54%"></div></div><b>Rp 3.125.000</b></div><div class="branch-bar"><span>Rancamanyar</span><div class="track"><div class="fill" style="width:43%"></div></div><b>Rp 2.480.000</b></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Produk Terlaris</h2><button class="link" data-page="Produk">Lihat Semua</button></div><div class="best-grid" id="bestList"></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Aktivitas Terbaru</h2><button class="link" id="allActivity">Lihat Semua</button></div><div class="activity"><div class="activity-icon" style="background:#dff8ec;color:#078953">✓</div><div><b>Transaksi selesai</b><p>TRX-20261020-0018 - Rp 2.850.000</p></div><span class="time">2 menit lalu</span></div><div class="activity"><div class="activity-icon">▣</div><div><b>Stok masuk</b><p>Samsung A54 5G (10 unit)</p></div><span class="time">15 menit lalu</span></div><div class="activity"><div class="activity-icon">▣</div><div><b>Pesanan marketplace</b><p>#SPX20261020-001 - Tokopedia</p></div><span class="time">32 menit lalu</span></div><div class="activity"><div class="activity-icon">🔧</div><div><b>Tiket servis baru</b><p>TSV-20261020-003 - iPhone 11</p></div><span class="time">1 jam lalu</span></div><div class="activity"><div class="activity-icon">♙</div><div><b>Pengguna login</b><p>Ahmad (Owner)</p></div><span class="time">1 jam lalu</span></div></div>
+  </div>
 </section><div id="pageNotice" class="card panel empty-note"></div>
 </div></main></div>
 <script>
