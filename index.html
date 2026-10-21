@@ -271,6 +271,30 @@ td{padding:9px 8px}
  .dashboard-row-secondary>.card:nth-child(2) .table-wrap th,
  .dashboard-row-secondary>.card:nth-child(2) .table-wrap td{padding:7px 6px}
 }
+
+/* Final table-fit refinement: prevent desktop overflow while retaining all columns. */
+.dashboard-row-secondary>.card:nth-child(2){min-width:0;overflow:hidden}
+.dashboard-row-secondary>.card:nth-child(2) .table-wrap{width:100%;max-width:100%;overflow:hidden!important}
+.dashboard-row-secondary>.card:nth-child(2) table{width:100%!important;min-width:0!important;max-width:100%;table-layout:fixed!important;border-collapse:collapse;font-size:9px}
+.dashboard-row-secondary>.card:nth-child(2) th,
+.dashboard-row-secondary>.card:nth-child(2) td{padding:8px 3px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(1),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(1){width:29%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(2),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(2){width:20%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(3),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(3){width:18%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(4),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(4){width:16%}
+.dashboard-row-secondary>.card:nth-child(2) th:nth-child(5),
+.dashboard-row-secondary>.card:nth-child(2) td:nth-child(5){width:17%}
+@media(max-width:850px){
+ .dashboard-row-secondary>.card:nth-child(2) .table-wrap{overflow-x:auto!important}
+ .dashboard-row-secondary>.card:nth-child(2) table{min-width:540px!important;table-layout:auto!important}
+ .dashboard-row-secondary>.card:nth-child(2) th,
+ .dashboard-row-secondary>.card:nth-child(2) td{padding:8px 6px!important;overflow:visible;text-overflow:clip}
+}
+
 </style>
 </head>
 <body>
