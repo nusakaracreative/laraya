@@ -230,12 +230,40 @@ td{padding:9px 8px}
   .table-wrap{overflow-x:auto}
 }
 
+
+/* Deep-audit remediation: use the approved transparent LARAYA master logo
+   and make operational filter feedback visible without changing dashboard composition. */
+.brand{display:flex;align-items:center;min-width:0;height:60px;overflow:visible}
+.brand-lockup{display:flex;align-items:center;min-width:0;width:100%;height:auto;overflow:visible}
+.brand-lockup img{display:block;width:100%;max-width:190px;max-height:44px;height:auto;object-fit:contain;object-position:left center}
+.filter-feedback{display:block!important;margin:0 0 10px;padding:8px 11px;border:1px solid #d9e8f2;border-radius:9px;background:#eef7fc;color:#234b63;font-size:11px;line-height:1.45}
+.filter-feedback:empty{display:none!important}
+@media (min-width:561px) and (max-width:850px){
+  .sidebar{overflow-y:auto;overscroll-behavior:contain}
+  .brand{height:48px;min-height:48px;justify-content:center;padding:0!important}
+  .brand-lockup{justify-content:center;width:42px;height:42px}
+  .brand-lockup img{width:42px;height:42px;max-width:42px;max-height:42px;object-fit:cover;object-position:left center}
+  .nav{max-height:calc(100vh - 155px);overflow-y:auto;align-content:start;overscroll-behavior:contain}
+  .branch{flex-shrink:0}
+}
+@media (max-width:560px){
+  .brand{display:none}
+  .filter-feedback{margin-bottom:9px;padding:8px 9px;font-size:10px}
+}
+@media (max-width:360px){
+  .content{padding-left:8px;padding-right:8px}
+  .kpi{padding:8px;gap:6px}
+  .kpi-icon{width:31px;height:31px}
+  .kpi-value{font-size:14px}
+  .periods button{padding-left:6px;padding-right:6px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="sidebar">
-<div class="brand"><div class="brand-lockup" aria-label="NUSAKARA Electronics System"><svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true"><path d="M3 5h7l16 20V5h7v26h-7L10 11v20H3z" fill="#20b8f4"/><path d="M3 5h7l6 8v10z" fill="#f4fbff"/><path d="M26 25l7 6h-7l-5-6z" fill="#1685d4"/></svg><span class="brand-type"><b>NUSAKARA</b><small>ELECTRONICS SYSTEM</small></span></div></div>
+<div class="brand"><a class="brand-lockup" href="index.html" aria-label="LARAYA — Dashboard"><img src="https://raw.githubusercontent.com/nusakaracreative/laraya/main/Laraya%20master%20desain%20with%20text%20transparan%20SVG.svg" alt="LARAYA — Digital Systems &amp; Technology"></a></div>
 <nav class="nav" id="nav">
 <button class="active" data-page="Dashboard"><span class="ico">⌂</span><span class="nav-label">Dashboard</span></button>
 <button data-page="Produk"><span class="ico">▣</span><span class="nav-label">Produk</span></button>
